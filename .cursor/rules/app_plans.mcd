@@ -1,0 +1,214 @@
+Phase plan with milestones and acceptance criteria
+Phase 1 — Core domain
+Tasks:
+Define CalculationFunction, CalculationResult domain entities
+Create FunctionId value object
+Define CalculationError sealed class (notFound, invalidInput, timeout, unknown)
+Establish ICalculationRepository interface
+Acceptance: domain models immutable, equality via Freezed, simple use-cases scaffolded
+Phase 2 — Data layer scaffolding
+Tasks:
+Create CalculationDto with fromJson, toDomain, toJson
+Add CalculationRemoteService with retry/backoff scaffolding
+Add local cache service (optional)
+Implement CalculationRepositoryImpl mapping DTOs to domain and mapping data errors to domain errors
+Centralize API endpoints/keys in calculation_api_keys.dart
+Acceptance: DTOs map to domain; repository adheres to domain interface
+Phase 3 — Application layer (state management)
+Tasks:
+Create CalculationState (immutable) with dataState-like structure or AsyncValue
+Implement CalculationNotifier (StateNotifier or AsyncNotifier) coordinating repo calls
+Ensure no UI logic in notifier
+Acceptance: clean state transitions (idle → loading → success/failure); state is immutable
+Phase 4 — Dependency injection & providers
+Tasks:
+Create Riverpod providers to inject repository and remote service
+Expose CalculationNotifier via a provider
+Acceptance: provider types correct; easy to override in tests
+Phase 5 — Modular online service plugin architecture
+Tasks:
+Define ICalculationService base interface
+Implement a CalculationServiceRegistry to plug multiple online providers at runtime
+Each plugin implements ICalculationService and registers with the registry
+Acceptance: new calculation functions can be added by implementing a plugin; runtime selection possible
+Phase 6 — Presentation layer
+Tasks:
+Create CalculationPage and CalculationWidget wired to CalculationNotifier
+UI supports selecting calculation function, input values, and displaying results
+Acceptance: UI reads state via ref.watch(provider) and triggers actions via ref.read(provider.notifier)
+Phase 7 — Testing strategy
+Tasks:
+Mirror Testing_Rules structure for domain, data, application, presentation
+Create mocks/fakes; data builders; test data
+Validate state transitions and plugin loading
+Acceptance: comprehensive test coverage across layers with fast tests
+Phase 8 — Security and CI
+Tasks:
+Load API keys via .env and DI
+Document CI secrets strategy; wire environment variables in tests
+Acceptance: no hard-coded secrets; CI can inject keys for integration tests
+Phase 9 — Bootstrapping and expansion
+Tasks:
+Start with a minimal function set: add, subtract, multiply, divide
+Provide a straightforward path to add more functions via the plugin registry
+Acceptance: working baseline with extensibility demonstrated
+Phase 10 — Non-functional considerations
+Tasks:
+Caching, offline behavior, rate limiting, and observability hooks
+Acceptance: clear extension points for performance, reliability, and monitoring
+
+# Online Math Services Integration Plan (Desmos, Symbolab, Wolfram Alpha)
+
+## Overview
+Modular architecture for integrating Desmos, Symbolab, and Wolfram Alpha as pluggable calculation services with embeddable widgets. Services can be swapped via dropdown without core code changes.
+
+## Phase 11 — Domain Foundation for Online Services
+Tasks:
+Define segregated service interfaces (SOLID):
+- i_arithmetic_service.dart (basic arithmetic & algebra)
+- i_equation_solver_service.dart (equation solving)
+- i_step_provider_service.dart (step-by-step solutions)
+- i_trigonometry_service.dart (trig functions)
+- i_calculus_service.dart (derivatives, integrals, limits)
+- i_graphing_service.dart (2D plotting)
+- i_complex_number_service.dart (complex arithmetic)
+- i_matrix_service.dart (linear algebra)
+- i_series_service.dart (limits, series, transforms)
+- i_widget_embed_service.dart (embedding interface)
+- i_web_embed_renderer.dart (WebView abstraction)
+Create domain models: CalculationRequest, CalculationResult, WidgetConfig, EmbedResult
+Define OnlineMathError sealed class
+Create WidgetType and ServiceProvider value objects
+Acceptance: Pure interfaces with no implementation dependencies; services can implement only capabilities they support
+
+## Phase 12 — Service Registry & Capability Matrix
+Tasks:
+Implement ServiceRegistry with plugin registration pattern
+Create ServiceCapabilities mapping (provider → supported operations)
+Build ServiceSelector logic for optimal service selection
+Define capability matrix:
+  - Graphing: Desmos (primary), Symbolab/Wolfram (secondary)
+  - Steps: Symbolab (primary), Wolfram (secondary), Desmos (limited)
+  - Symbolic: Wolfram/Symbolab (primary), Desmos (limited)
+  - Matrices: Symbolab/Wolfram (yes), Desmos (no)
+  - Complex: Symbolab/Wolfram (yes), Desmos (limited)
+Acceptance: Services register themselves; registry selects best provider per operation
+
+## Phase 13 — Data Layer Service Implementations
+Tasks:
+Create BaseOnlineService adapter (common HTTP, retry, error mapping)
+Implement Desmos plugin:
+  - desmos_service_impl.dart (implements applicable interfaces)
+  - desmos_widget_builder.dart (embed HTML/URLs)
+  - desmos_capability_map.dart (supported operations)
+Implement Symbolab plugin (same structure)
+Implement Wolfram Alpha plugin (same structure)
+Create WebViewEmbedRenderer using flutter_inappwebview
+Acceptance: Each service works independently; can be added/removed without affecting others
+
+## Phase 14 — Widget Embedding System
+Tasks:
+Define widget types enum:
+  - GraphingCalculator
+  - GenericCalculator
+  - StepByStepSolver
+  - IntegralCalculator
+  - DerivativeCalculator
+  - EquationSolver
+  - TrigCalculator
+  - MatrixCalculator
+Implement widget builders per service
+Create embed result handlers (URL, HTML snippet, widget ID)
+Set up WebView rendering for all platforms
+Acceptance: Any service can provide embeddable widgets; common renderer displays them
+
+## Phase 15 — Application Layer for Online Math
+Tasks:
+Create OnlineMathState (service, operation, result, widget config)
+Create WidgetEmbedState (widget selection, HTML, config)
+Implement OnlineMathNotifier (orchestrates without knowing implementations)
+Implement WidgetEmbedNotifier (manages widget lifecycle)
+Implement ServiceSelectionNotifier (handles service switching)
+Set up providers: onlineMathProviders, serviceRegistryProvider, widgetProviders
+Acceptance: State management independent of service implementations
+
+## Phase 16 — Presentation Layer for Online Math
+Tasks:
+Create OnlineMathPage with:
+  - Service dropdown (top-right)
+  - Operation tabs (horizontal scroll)
+  - Adaptive input area
+  - Execute button
+  - Result area (text/graph/widget)
+Build widget components:
+  - ServiceSelectorDropdown
+  - OperationTabBar
+  - MathInputField
+  - WebViewEmbedWidget
+  - ResultDisplayWidget
+  - StepByStepViewer
+Create OnlineMathUiProvider for UI-only state
+Acceptance: Clean UI with service switching; WebView displays embeds
+
+## Phase 17 — Configuration & Environment Setup
+Tasks:
+Create online_service_config.dart (endpoints, templates, limits)
+Set up .env.example with API key placeholders:
+  - DESMOS_API_KEY
+  - SYMBOLAB_API_KEY
+  - WOLFRAM_APP_ID
+Implement flutter_dotenv integration
+Add .env to .gitignore
+Document CI secrets strategy
+Acceptance: No hardcoded keys; environment-based configuration
+
+## Phase 18 — Testing for Online Services
+Tasks:
+Create domain tests (interfaces, models, errors)
+Create data tests with mocked API responses
+Create application tests (state transitions, registry)
+Create presentation tests with mock WebView
+Build test helpers for service mocking
+Create integration tests per service
+Acceptance: Each layer testable independently; services swappable in tests
+
+## Implementation Schedule
+Week 1: Domain layer (all interfaces, models, errors)
+Week 2: Application layer (registry, state, notifiers)
+Week 3: Data layer foundation (base adapter, config, error mapping)
+Week 4: Desmos implementation (graphing focus)
+Week 5: Symbolab implementation (steps focus)
+Week 6: Wolfram implementation (comprehensive)
+Week 7: Presentation layer (page, WebView, widgets)
+Week 8: Testing, polish, documentation
+
+## Key Design Principles
+1. Interface Segregation: Each operation has its own interface
+2. Dependency Inversion: Application depends on interfaces, not implementations
+3. Open/Closed: Add services by implementing interfaces, no core changes
+4. Single Responsibility: Each service handles its own API and widgets
+5. Plugin Architecture: Services register themselves with the registry
+
+## Common Functions Supported
+- Basic arithmetic & algebra
+- Equation solving (linear, quadratic, polynomial, systems)
+- Step-by-step solutions
+- Trigonometry (functions, equations, identities)
+- Calculus (derivatives, integrals, limits)
+- 2D graphing/plotting
+- Complex numbers
+- Matrix operations
+- Series and transforms
+
+## Embeddable Widget Types
+- Interactive graphing calculator
+- Generic calculator widget
+- Step-by-step solver widgets
+- Topic-specific calculators (integral, derivative, equation, trig, matrix)
+- Custom widgets via API/builder
+
+## Technical Stack
+- WebView: flutter_inappwebview (cross-platform)
+- State: Riverpod (following existing architecture)
+- Architecture: Clean Architecture with plugin pattern
+- Testing: Comprehensive unit, widget, integration tests
