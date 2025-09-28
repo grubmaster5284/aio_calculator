@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/k_sizes.dart';
-import '../widgets/top_nav_bar.dart';
+import '../../../core/widgets/top_nav_bar.dart';
 import '../widgets/calculator_display.dart';
 import '../widgets/calculator_keypad.dart';
 import '../widgets/calculator_history.dart';
@@ -35,6 +35,7 @@ class CalculatorPage extends ConsumerWidget {
                 children: [
                   TopNavBar(
                     isCalculatorScreen: true,
+                    showHistoryButton: true,
                     onHistoryTap: () {
                       ref.read(isHistoryOnlyModeProvider.notifier).state = false;
                     },
@@ -66,6 +67,7 @@ class CalculatorPage extends ConsumerWidget {
                   // Unified Navigation Bar
                   TopNavBar(
                     isCalculatorScreen: true,
+                    showHistoryButton: true,
                     onHistoryTap: () {
                       final current = ref.read(isHistoryOnlyModeProvider);
                       ref.read(isHistoryOnlyModeProvider.notifier).state = !current;

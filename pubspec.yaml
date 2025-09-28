@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^2.4.0
   webview_flutter: ^4.0.0
+  flutter_dotenv: ^5.1.0
+  # flutter_inappwebview: ^6.0.0
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
 
@@ -25,3 +27,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - .env

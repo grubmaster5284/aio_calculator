@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/k_sizes.dart';
+import '../constants/k_sizes.dart';
 
+/// Common top navigation bar used across multiple screens.
+/// - Highlights the active destination
+/// - Navigates using named routes: '/', '/converter', '/graphing'
+/// - Optionally shows a History button on the calculator screen
 class TopNavBar extends StatelessWidget {
   final bool isCalculatorScreen;
+  final bool isGraphingScreen;
+  final bool showHistoryButton;
   final VoidCallback? onHistoryTap;
 
   const TopNavBar({
     super.key,
     required this.isCalculatorScreen,
+    this.isGraphingScreen = false,
+    this.showHistoryButton = false,
     this.onHistoryTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bool isConverterScreen = !isCalculatorScreen && !isGraphingScreen;
+
     return Container(
       height: 56,
       padding: const EdgeInsets.symmetric(horizontal: KSize.margin4x),
@@ -27,7 +37,7 @@ class TopNavBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Calculator icon button
+          // Calculator
           _buildNavButton(
             icon: Icons.calculate_outlined,
             isSelected: isCalculatorScreen,
@@ -38,19 +48,30 @@ class TopNavBar extends StatelessWidget {
             },
           ),
           const SizedBox(width: 16),
-          // Converter icon button  
+          // Converter
           _buildNavButton(
             icon: Icons.swap_horiz_outlined,
-            isSelected: !isCalculatorScreen,
+            isSelected: isConverterScreen,
             onTap: () {
-              if (isCalculatorScreen) {
+              if (!isConverterScreen) {
                 Navigator.of(context).pushNamed('/converter');
               }
             },
           ),
+          const SizedBox(width: 16),
+          // Graphing
+          _buildNavButton(
+            icon: Icons.show_chart_outlined,
+            isSelected: isGraphingScreen,
+            onTap: () {
+              if (!isGraphingScreen) {
+                Navigator.of(context).pushReplacementNamed('/graphing');
+              }
+            },
+          ),
           const Spacer(),
-          // History button (only show on calculator screen)
-          if (isCalculatorScreen)
+          // History (calculator screen only)
+          if (showHistoryButton && isCalculatorScreen)
             _buildNavButton(
               icon: Icons.history_outlined,
               isSelected: false,
@@ -88,3 +109,5 @@ class TopNavBar extends StatelessWidget {
     );
   }
 }
+
+

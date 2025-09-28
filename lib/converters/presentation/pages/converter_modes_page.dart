@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/k_sizes.dart';
-import '../../../calculator/presentation/widgets/top_nav_bar.dart';
+import '../../../core/widgets/top_nav_bar.dart';
 
 class ConverterModesPage extends StatelessWidget {
   const ConverterModesPage({super.key});
