@@ -15,7 +15,7 @@ class GraphingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final html = ref.watch(graphingHtmlProvider);
+    final embedAsync = ref.watch(graphingEmbedProvider);
 
     return Scaffold(
       backgroundColor: KColors.backgroundDark,
@@ -27,7 +27,20 @@ class GraphingPage extends ConsumerWidget {
               padding: const EdgeInsets.all(KSize.margin4x),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(KSize.radiusDefault),
-                child: WebViewEmbedWidget(htmlContent: html),
+                child: embedAsync.when(
+                  data: (embed) => WebViewEmbedWidget(htmlContent: embed.html),
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Failed to load graph'),
+                        const SizedBox(height: 8),
+                        Text('$e', style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
