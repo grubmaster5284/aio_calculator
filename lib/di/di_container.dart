@@ -4,5 +4,6 @@
 library;
 
 export 'calculator_di.dart';
+export 'calculator_module_di.dart';
 export 'graphing_di.dart';
 

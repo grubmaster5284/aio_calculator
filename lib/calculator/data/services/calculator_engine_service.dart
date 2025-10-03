@@ -1,7 +1,7 @@
 import 'dart:math' as dm;
 
-class CalculatorMathEngine {
-  const CalculatorMathEngine();
+class CalculatorEngineService {
+  const CalculatorEngineService();
 
   double? tryCompute(double storedValue, double currentValue, String operator) {
     switch (operator) {
@@ -99,5 +99,3 @@ class _Math {
   static double sqrt(double x) => dm.sqrt(x);
   static double pow(double a, double b) => dm.pow(a, b).toDouble();
 }
-
-

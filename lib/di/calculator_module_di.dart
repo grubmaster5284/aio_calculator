@@ -6,7 +6,7 @@ import 'package:calculator_online/calculator/data/services/calculator_engine_ser
 
 /// Dependency injection container for the calculator module
 /// This isolates data layer dependencies from the application layer
-class CalculatorDI {
+class CalculatorModuleDI {
   /// HTTP client provider - should be overridden in main.dart
   static final httpClientProvider = Provider<HttpClient>((ref) {
     throw UnimplementedError('Provide an HttpClient implementation via override.');
@@ -27,4 +27,3 @@ class CalculatorDI {
     return const CalculatorEngineService();
   });
 }
-

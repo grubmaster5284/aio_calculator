@@ -1,33 +1,33 @@
-class CalculatorUiState {
+class CalculatorDisplayState {
   final String displayValue;
   final String secondaryDisplayValue;
   final String? currentOperation;
   final double? storedValue;
-  final List<HistoryItem> history;
+  final List<CalculatorHistoryEntry> history;
   final bool isDegreesMode;
 
-  const CalculatorUiState({
+  const CalculatorDisplayState({
     this.displayValue = '0',
     this.secondaryDisplayValue = '',
     this.currentOperation,
     this.storedValue,
-    this.history = const <HistoryItem>[],
+    this.history = const <CalculatorHistoryEntry>[],
     this.isDegreesMode = true,
   });
 
-  factory CalculatorUiState.initial() => const CalculatorUiState();
+  factory CalculatorDisplayState.initial() => const CalculatorDisplayState();
 
-  CalculatorUiState copyWith({
+  CalculatorDisplayState copyWith({
     String? displayValue,
     String? secondaryDisplayValue,
     String? currentOperation,
     double? storedValue,
-    List<HistoryItem>? history,
+    List<CalculatorHistoryEntry>? history,
     bool? isDegreesMode,
     bool clearCurrentOperation = false,
     bool clearStoredValue = false,
   }) {
-    return CalculatorUiState(
+    return CalculatorDisplayState(
       displayValue: displayValue ?? this.displayValue,
       secondaryDisplayValue: secondaryDisplayValue ?? this.secondaryDisplayValue,
       currentOperation: clearCurrentOperation ? null : (currentOperation ?? this.currentOperation),
@@ -38,12 +38,12 @@ class CalculatorUiState {
   }
 }
 
-class HistoryItem {
+class CalculatorHistoryEntry {
   final String expression;
   final String result;
   final DateTime timestamp;
 
-  const HistoryItem({
+  const CalculatorHistoryEntry({
     required this.expression,
     required this.result,
     required this.timestamp,

@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calculator_online/calculator/application/state/calculator_ui_state.dart';
-import 'package:calculator_online/calculator/data/services/calculator_math_engine.dart';
+import 'package:calculator_online/calculator/data/services/calculator_engine_service.dart';
 
-class CalculatorUiNotifier extends StateNotifier<CalculatorUiState> {
-  final CalculatorMathEngine _engine;
+class CalculatorUiStateNotifier extends StateNotifier<CalculatorDisplayState> {
+  final CalculatorEngineService _engine;
 
-  CalculatorUiNotifier(this._engine) : super(CalculatorUiState.initial());
+  CalculatorUiStateNotifier(this._engine) : super(CalculatorDisplayState.initial());
 
   void press(String button) {
     final currentDisplay = state.displayValue;
 
     switch (button) {
       case 'AC':
-        state = CalculatorUiState.initial();
+        state = CalculatorDisplayState.initial();
         return;
       case '⌫':
         if (currentDisplay.length > 1) {
@@ -135,7 +135,7 @@ class CalculatorUiNotifier extends StateNotifier<CalculatorUiState> {
     final resultString = _engine.formatResult(result);
     state = state.copyWith(displayValue: resultString);
 
-    final item = HistoryItem(
+    final item = CalculatorHistoryEntry(
       expression: '$op(${x.toString()})',
       result: resultString,
       timestamp: DateTime.now(),
@@ -171,7 +171,7 @@ class CalculatorUiNotifier extends StateNotifier<CalculatorUiState> {
 
     if (addToHistory) {
       final history = state.history;
-      final newItem = HistoryItem(
+      final newItem = CalculatorHistoryEntry(
         expression: '$secondaryDisplay $currentDisplay',
         result: resultString,
         timestamp: DateTime.now(),

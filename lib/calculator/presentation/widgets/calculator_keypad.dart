@@ -51,38 +51,38 @@ class CalculatorKeypad extends ConsumerWidget {
           children: [
             // First row: AC, ⌫, %, ÷
             _buildCollapsedRow([
-              _buildCollapsedButton(ref, 'AC', ButtonType.clear, () => ref.read(calculatorUiNotifierProvider.notifier).press('AC')),
-              _buildCollapsedButton(ref, '⌫', ButtonType.function, () => ref.read(calculatorUiNotifierProvider.notifier).press('⌫')),
-              _buildCollapsedButton(ref, '%', ButtonType.function, () => ref.read(calculatorUiNotifierProvider.notifier).press('%')),
-              _buildCollapsedButton(ref, '÷', ButtonType.operator, () => ref.read(calculatorUiNotifierProvider.notifier).press('÷')),
+              _buildCollapsedButton(ref, 'AC', ButtonType.clear, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('AC')),
+              _buildCollapsedButton(ref, '⌫', ButtonType.function, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('⌫')),
+              _buildCollapsedButton(ref, '%', ButtonType.function, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('%')),
+              _buildCollapsedButton(ref, '÷', ButtonType.operator, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('÷')),
             ], adjustedSpacing),
             // Second row: 7, 8, 9, ×
             _buildCollapsedRow([
-              _buildCollapsedButton(ref, '7', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('7')),
-              _buildCollapsedButton(ref, '8', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('8')),
-              _buildCollapsedButton(ref, '9', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('9')),
-              _buildCollapsedButton(ref, '×', ButtonType.operator, () => ref.read(calculatorUiNotifierProvider.notifier).press('×')),
+              _buildCollapsedButton(ref, '7', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('7')),
+              _buildCollapsedButton(ref, '8', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('8')),
+              _buildCollapsedButton(ref, '9', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('9')),
+              _buildCollapsedButton(ref, '×', ButtonType.operator, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('×')),
             ], adjustedSpacing),
             // Third row: 4, 5, 6, -
             _buildCollapsedRow([
-              _buildCollapsedButton(ref, '4', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('4')),
-              _buildCollapsedButton(ref, '5', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('5')),
-              _buildCollapsedButton(ref, '6', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('6')),
-              _buildCollapsedButton(ref, '-', ButtonType.operator, () => ref.read(calculatorUiNotifierProvider.notifier).press('-')),
+              _buildCollapsedButton(ref, '4', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('4')),
+              _buildCollapsedButton(ref, '5', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('5')),
+              _buildCollapsedButton(ref, '6', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('6')),
+              _buildCollapsedButton(ref, '-', ButtonType.operator, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('-')),
             ], adjustedSpacing),
             // Fourth row: 1, 2, 3, +
             _buildCollapsedRow([
-              _buildCollapsedButton(ref, '1', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('1')),
-              _buildCollapsedButton(ref, '2', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('2')),
-              _buildCollapsedButton(ref, '3', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('3')),
-              _buildCollapsedButton(ref, '+', ButtonType.operator, () => ref.read(calculatorUiNotifierProvider.notifier).press('+')),
+              _buildCollapsedButton(ref, '1', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('1')),
+              _buildCollapsedButton(ref, '2', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('2')),
+              _buildCollapsedButton(ref, '3', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('3')),
+              _buildCollapsedButton(ref, '+', ButtonType.operator, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('+')),
             ], adjustedSpacing),
             // Fifth row: expand/collapse, 0, ., =
             _buildCollapsedRow([
               _buildCollapsedButton(ref, '⛶', ButtonType.function, () => ref.read(isCalculatorExpandedProvider.notifier).state = !isExpanded, isCalculatorExpanded: isExpanded),
-              _buildCollapsedButton(ref, '0', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('0')),
-              _buildCollapsedButton(ref, '.', ButtonType.number, () => ref.read(calculatorUiNotifierProvider.notifier).press('.')),
-              _buildCollapsedButton(ref, '=', ButtonType.equals, () => ref.read(calculatorUiNotifierProvider.notifier).press('=')),
+              _buildCollapsedButton(ref, '0', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('0')),
+              _buildCollapsedButton(ref, '.', ButtonType.number, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('.')),
+              _buildCollapsedButton(ref, '=', ButtonType.equals, () => ref.read(calculatorUiStateNotifierProvider.notifier).press('=')),
             ], 0), // No spacing after last row
           ],
         );
@@ -92,7 +92,7 @@ class CalculatorKeypad extends ConsumerWidget {
 
   Widget _buildExpandedLayout(WidgetRef ref, bool isExpanded) {
     final isSecondFunction = ref.watch(isSecondFunctionProvider);
-    final isDegrees = ref.watch(calculatorUiNotifierProvider).isDegreesMode;
+    final isDegrees = ref.watch(calculatorUiStateNotifierProvider).isDegreesMode;
 
     return SingleChildScrollView(
       child: Column(
@@ -119,7 +119,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 type: ButtonType.function,
                 isExpanded: true,
                 onPressed: () {
-                  ref.read(calculatorUiNotifierProvider.notifier).toggleDegrees();
+                  ref.read(calculatorUiStateNotifierProvider.notifier).toggleDegrees();
                 },
               ),
             ),
@@ -129,7 +129,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: isSecondFunction ? 'sin⁻¹' : 'sin',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press(isSecondFunction ? 'asin' : 'sin'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press(isSecondFunction ? 'asin' : 'sin'),
               ),
             ),
             Expanded(
@@ -138,7 +138,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: isSecondFunction ? 'cos⁻¹' : 'cos',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press(isSecondFunction ? 'acos' : 'cos'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press(isSecondFunction ? 'acos' : 'cos'),
               ),
             ),
             Expanded(
@@ -147,7 +147,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: isSecondFunction ? 'tan⁻¹' : 'tan',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press(isSecondFunction ? 'atan' : 'tan'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press(isSecondFunction ? 'atan' : 'tan'),
               ),
             ),
           ],
@@ -161,7 +161,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: 'xʸ',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('^'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('^'),
               ),
             ),
             Expanded(
@@ -170,7 +170,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: 'lg',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('log'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('log'),
               ),
             ),
             Expanded(
@@ -179,7 +179,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: 'ln',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('ln'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('ln'),
               ),
             ),
             Expanded(
@@ -188,7 +188,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '(',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('('),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('('),
               ),
             ),
             Expanded(
@@ -197,7 +197,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: ')',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press(')'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press(')'),
               ),
             ),
           ],
@@ -211,7 +211,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '√',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('√'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('√'),
               ),
             ),
             Expanded(
@@ -220,7 +220,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: 'AC',
                 type: ButtonType.clear,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('AC'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('AC'),
               ),
             ),
             Expanded(
@@ -229,7 +229,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '⌫',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('⌫'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('⌫'),
               ),
             ),
             Expanded(
@@ -238,7 +238,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '%',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('%'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('%'),
               ),
             ),
             Expanded(
@@ -247,7 +247,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '÷',
                 type: ButtonType.operator,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('÷'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('÷'),
               ),
             ),
           ],
@@ -261,7 +261,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: 'x!',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('!'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('!'),
               ),
             ),
             Expanded(
@@ -270,7 +270,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '7',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('7'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('7'),
               ),
             ),
             Expanded(
@@ -279,7 +279,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '8',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('8'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('8'),
               ),
             ),
             Expanded(
@@ -288,7 +288,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '9',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('9'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('9'),
               ),
             ),
             Expanded(
@@ -297,7 +297,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '×',
                 type: ButtonType.operator,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('×'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('×'),
               ),
             ),
           ],
@@ -311,7 +311,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '1/x',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('1/x'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('1/x'),
               ),
             ),
             Expanded(
@@ -320,7 +320,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '4',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('4'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('4'),
               ),
             ),
             Expanded(
@@ -329,7 +329,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '5',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('5'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('5'),
               ),
             ),
             Expanded(
@@ -338,7 +338,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '6',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('6'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('6'),
               ),
             ),
             Expanded(
@@ -347,7 +347,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '-',
                 type: ButtonType.operator,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('-'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('-'),
               ),
             ),
           ],
@@ -361,7 +361,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: 'π',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('π'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('π'),
               ),
             ),
             Expanded(
@@ -370,7 +370,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '1',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('1'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('1'),
               ),
             ),
             Expanded(
@@ -379,7 +379,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '2',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('2'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('2'),
               ),
             ),
             Expanded(
@@ -388,7 +388,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '3',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('3'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('3'),
               ),
             ),
             Expanded(
@@ -397,7 +397,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '+',
                 type: ButtonType.operator,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('+'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('+'),
               ),
             ),
           ],
@@ -421,7 +421,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: 'e',
                 type: ButtonType.function,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('e'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('e'),
               ),
             ),
             Expanded(
@@ -430,7 +430,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '0',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('0'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('0'),
               ),
             ),
             Expanded(
@@ -439,7 +439,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '.',
                 type: ButtonType.number,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('.'),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('.'),
               ),
             ),
             Expanded(
@@ -448,7 +448,7 @@ class CalculatorKeypad extends ConsumerWidget {
                 text: '=',
                 type: ButtonType.equals,
                 isExpanded: true,
-                onPressed: () => ref.read(calculatorUiNotifierProvider.notifier).press('='),
+                onPressed: () => ref.read(calculatorUiStateNotifierProvider.notifier).press('='),
               ),
             ),
           ],
@@ -460,7 +460,7 @@ class CalculatorKeypad extends ConsumerWidget {
 
   Widget _buildLandscapeExpandedLayout(WidgetRef ref, bool isExpanded, double availableHeight) {
     final isSecondFunction = ref.watch(isSecondFunctionProvider);
-    final isDegrees = ref.watch(calculatorUiNotifierProvider).isDegreesMode;
+    final isDegrees = ref.watch(calculatorUiStateNotifierProvider).isDegreesMode;
     
     // Calculate how many rows we can fit
     final buttonHeight = KSize.buttonHeightCalculatorExpanded;
@@ -479,83 +479,83 @@ class CalculatorKeypad extends ConsumerWidget {
             _buildExpandedButton(ref, '2nd', isSecondFunction ? ButtonType.operator : ButtonType.function, 
                 () => ref.read(isSecondFunctionProvider.notifier).state = !isSecondFunction, isExpanded),
             _buildExpandedButton(ref, isDegrees ? 'deg' : 'rad', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).toggleDegrees(), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).toggleDegrees(), isExpanded),
             _buildExpandedButton(ref, isSecondFunction ? 'sin⁻¹' : 'sin', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press(isSecondFunction ? 'asin' : 'sin'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press(isSecondFunction ? 'asin' : 'sin'), isExpanded),
             _buildExpandedButton(ref, isSecondFunction ? 'cos⁻¹' : 'cos', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press(isSecondFunction ? 'acos' : 'cos'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press(isSecondFunction ? 'acos' : 'cos'), isExpanded),
             _buildExpandedButton(ref, isSecondFunction ? 'tan⁻¹' : 'tan', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press(isSecondFunction ? 'atan' : 'tan'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press(isSecondFunction ? 'atan' : 'tan'), isExpanded),
           ]),
           
           // Second row: x^y, lg, ln, (, )
           if (rows >= 2) _buildExpandedRow([
             _buildExpandedButton(ref, 'xʸ', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('^'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('^'), isExpanded),
             _buildExpandedButton(ref, 'lg', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('log'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('log'), isExpanded),
             _buildExpandedButton(ref, 'ln', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('ln'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('ln'), isExpanded),
             _buildExpandedButton(ref, '(', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('('), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('('), isExpanded),
             _buildExpandedButton(ref, ')', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press(')'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press(')'), isExpanded),
           ]),
           
           // Third row: √x, AC, ⌫, %, ÷
           if (rows >= 3) _buildExpandedRow([
             _buildExpandedButton(ref, '√', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('√'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('√'), isExpanded),
             _buildExpandedButton(ref, 'AC', ButtonType.clear, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('AC'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('AC'), isExpanded),
             _buildExpandedButton(ref, '⌫', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('⌫'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('⌫'), isExpanded),
             _buildExpandedButton(ref, '%', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('%'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('%'), isExpanded),
             _buildExpandedButton(ref, '÷', ButtonType.operator, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('÷'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('÷'), isExpanded),
           ]),
           
           // Fourth row: x!, 7, 8, 9, ×
           if (rows >= 4) _buildExpandedRow([
             _buildExpandedButton(ref, 'x!', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('!'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('!'), isExpanded),
             _buildExpandedButton(ref, '7', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('7'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('7'), isExpanded),
             _buildExpandedButton(ref, '8', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('8'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('8'), isExpanded),
             _buildExpandedButton(ref, '9', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('9'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('9'), isExpanded),
             _buildExpandedButton(ref, '×', ButtonType.operator, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('×'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('×'), isExpanded),
           ]),
           
           // Fifth row: 1/x, 4, 5, 6, -
           if (rows >= 5) _buildExpandedRow([
             _buildExpandedButton(ref, '1/x', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('1/x'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('1/x'), isExpanded),
             _buildExpandedButton(ref, '4', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('4'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('4'), isExpanded),
             _buildExpandedButton(ref, '5', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('5'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('5'), isExpanded),
             _buildExpandedButton(ref, '6', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('6'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('6'), isExpanded),
             _buildExpandedButton(ref, '-', ButtonType.operator, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('-'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('-'), isExpanded),
           ]),
           
           // Sixth row: π, 1, 2, 3, +
           if (rows >= 6) _buildExpandedRow([
             _buildExpandedButton(ref, 'π', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('π'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('π'), isExpanded),
             _buildExpandedButton(ref, '1', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('1'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('1'), isExpanded),
             _buildExpandedButton(ref, '2', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('2'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('2'), isExpanded),
             _buildExpandedButton(ref, '3', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('3'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('3'), isExpanded),
             _buildExpandedButton(ref, '+', ButtonType.operator, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('+'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('+'), isExpanded),
           ]),
           
           // Seventh row: expand/collapse, e, 0, ., =
@@ -563,13 +563,13 @@ class CalculatorKeypad extends ConsumerWidget {
             _buildExpandedButton(ref, '⛶', ButtonType.function, 
                 () => ref.read(isCalculatorExpandedProvider.notifier).state = !isExpanded, isExpanded, isCalculatorExpanded: isExpanded),
             _buildExpandedButton(ref, 'e', ButtonType.function, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('e'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('e'), isExpanded),
             _buildExpandedButton(ref, '0', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('0'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('0'), isExpanded),
             _buildExpandedButton(ref, '.', ButtonType.number, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('.'), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('.'), isExpanded),
             _buildExpandedButton(ref, '=', ButtonType.equals, 
-                () => ref.read(calculatorUiNotifierProvider.notifier).press('='), isExpanded),
+                () => ref.read(calculatorUiStateNotifierProvider.notifier).press('='), isExpanded),
           ]),
         ],
       ),

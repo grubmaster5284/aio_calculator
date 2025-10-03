@@ -10,7 +10,7 @@ class CalculatorHistory extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final history = ref.watch(calculatorUiNotifierProvider).history;
+    final history = ref.watch(calculatorUiStateNotifierProvider).history;
     final isHistoryOnly = ref.watch(isHistoryOnlyModeProvider);
 
     if (history.isEmpty) {
@@ -60,11 +60,11 @@ class CalculatorHistory extends ConsumerWidget {
                     onPressed: items.isEmpty
                         ? null
                         : () {
-                            final current = ref.read(calculatorUiNotifierProvider).history;
+                            final current = ref.read(calculatorUiStateNotifierProvider).history;
                             final removeCount = current.length >= 3 ? 3 : current.length;
-                            ref.read(calculatorUiNotifierProvider.notifier).clearRecent(count: removeCount);
+                            ref.read(calculatorUiStateNotifierProvider.notifier).clearRecent(count: removeCount);
                             // Also perform AC to reset calculator state
-                            ref.read(calculatorUiNotifierProvider.notifier).press('AC');
+                            ref.read(calculatorUiStateNotifierProvider.notifier).press('AC');
                           },
                     child: Text(
                       'Clear',
@@ -119,10 +119,10 @@ class CalculatorHistory extends ConsumerWidget {
     );
   }
 
-  Widget _buildHistoryItem(WidgetRef ref, HistoryItem item) {
+  Widget _buildHistoryItem(WidgetRef ref, CalculatorHistoryEntry item) {
     return GestureDetector(
       onTap: () {
-        ref.read(calculatorUiNotifierProvider.notifier).setDisplay(item.result);
+        ref.read(calculatorUiStateNotifierProvider.notifier).setDisplay(item.result);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: KSize.margin2x),

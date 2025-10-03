@@ -50,9 +50,9 @@ class CalculatorPage extends ConsumerWidget {
                           top: 8,
                           child: TextButton(
                             onPressed: () {
-                              ref.read(calculatorUiNotifierProvider.notifier).clearHistory();
+                              ref.read(calculatorUiStateNotifierProvider.notifier).clearHistory();
                               // Also perform AC to reset calculator state
-                              ref.read(calculatorUiNotifierProvider.notifier).press('AC');
+                              ref.read(calculatorUiStateNotifierProvider.notifier).press('AC');
                             },
                             child: const Text('Clear all'),
                           ),

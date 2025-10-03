@@ -9,7 +9,7 @@ class CalculatorDisplay extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(calculatorUiNotifierProvider);
+    final uiState = ref.watch(calculatorUiStateNotifierProvider);
     final displayValue = uiState.displayValue;
     final secondaryValue = uiState.secondaryDisplayValue;
 
