@@ -5,7 +5,7 @@ part 'calculation_result_model.freezed.dart';
 
 /// Domain entity representing the outcome of a calculation.
 @freezed
-class CalculationResultModel with _$CalculationResultModel {
+abstract class CalculationResultModel with _$CalculationResultModel {
   const factory CalculationResultModel({
     required FunctionId functionId,
     @Default(0.0) double value,

@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calculator_online/calculator/application/state/calculator_ui_state.dart';
-import 'package:calculator_online/calculator/domain/services/calculator_engine.dart';
+import 'package:calculator_online/calculator/data/services/calculator_math_engine.dart';
 
 class CalculatorUiNotifier extends StateNotifier<CalculatorUiState> {
-  final CalculatorEngine _engine;
+  final CalculatorMathEngine _engine;
 
   CalculatorUiNotifier(this._engine) : super(CalculatorUiState.initial());
 

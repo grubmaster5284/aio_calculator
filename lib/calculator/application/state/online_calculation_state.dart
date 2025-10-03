@@ -2,22 +2,22 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:calculator_online/calculator/domain/entities/calculation_function_model.dart';
 import 'package:calculator_online/calculator/domain/entities/calculation_result_model.dart';
 
-part 'calculation_state.freezed.dart';
+part 'online_calculation_state.freezed.dart';
 
 @freezed
-class CalculationState with _$CalculationState {
-  const CalculationState._();
-
-  const factory CalculationState({
+abstract class OnlineCalculationState with _$OnlineCalculationState {
+  const factory OnlineCalculationState({
     @Default(false) bool isLoading,
     @Default(<CalculationFunctionModel>[]) List<CalculationFunctionModel> functions,
     CalculationResultModel? lastResult,
     String? errorMessage,
-  }) = _CalculationState;
+  }) = _OnlineCalculationState;
+
+  const OnlineCalculationState._();
 
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
 
-  factory CalculationState.initial() => const CalculationState();
+  factory OnlineCalculationState.initial() => const OnlineCalculationState();
 }
 
 

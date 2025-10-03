@@ -7,7 +7,7 @@ part 'calculation_function_dto.freezed.dart';
 part 'calculation_function_dto.g.dart';
 
 @freezed
-class CalculationFunctionDto with _$CalculationFunctionDto {
+abstract class CalculationFunctionDto with _$CalculationFunctionDto {
   const factory CalculationFunctionDto({
     @Default('') String id,
     @Default('') String name,

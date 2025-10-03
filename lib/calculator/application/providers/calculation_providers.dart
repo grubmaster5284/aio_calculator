@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:calculator_online/calculator/application/notifier/calculation_notifier.dart';
-import 'package:calculator_online/calculator/application/state/calculation_state.dart';
+import 'package:calculator_online/calculator/application/notifier/online_calculation_notifier.dart';
+import 'package:calculator_online/calculator/application/state/online_calculation_state.dart';
 import 'package:calculator_online/calculator/application/notifier/calculator_ui_notifier.dart';
 import 'package:calculator_online/calculator/application/state/calculator_ui_state.dart';
 import 'package:calculator_online/di/calculator_di.dart';
@@ -12,8 +12,8 @@ final calculationRemoteServiceProvider = CalculatorDI.calculationRemoteServicePr
 final calculationRepositoryProvider = CalculatorDI.calculationRepositoryProvider;
 
 final calculationNotifierProvider =
-    StateNotifierProvider<CalculationNotifier, CalculationState>((ref) {
-  return CalculationNotifier(ref.watch(calculationRepositoryProvider));
+    StateNotifierProvider<OnlineCalculationNotifier, OnlineCalculationState>((ref) {
+  return OnlineCalculationNotifier(ref.watch(calculationRepositoryProvider));
 });
 
 /// UI-only calculator provider (offline keypad logic)

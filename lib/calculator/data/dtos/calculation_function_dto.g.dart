@@ -6,23 +6,24 @@ part of 'calculation_function_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CalculationFunctionDtoImpl _$$CalculationFunctionDtoImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CalculationFunctionDtoImpl(
-      id: json['id'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      parameters: (json['parameters'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const <String>[],
-    );
+_CalculationFunctionDto _$CalculationFunctionDtoFromJson(
+  Map<String, dynamic> json,
+) => _CalculationFunctionDto(
+  id: json['id'] as String? ?? '',
+  name: json['name'] as String? ?? '',
+  description: json['description'] as String? ?? '',
+  parameters:
+      (json['parameters'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
+);
 
-Map<String, dynamic> _$$CalculationFunctionDtoImplToJson(
-        _$CalculationFunctionDtoImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'description': instance.description,
-      'parameters': instance.parameters,
-    };
+Map<String, dynamic> _$CalculationFunctionDtoToJson(
+  _CalculationFunctionDto instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'description': instance.description,
+  'parameters': instance.parameters,
+};

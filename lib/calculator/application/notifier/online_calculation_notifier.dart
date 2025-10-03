@@ -3,8 +3,8 @@ import 'package:calculator_online/calculator/application/state/online_calculatio
 import 'package:calculator_online/calculator/domain/repositories/i_calculation_repository.dart';
 import 'package:calculator_online/calculator/domain/value_objects/function_id_vo.dart';
 
-class CalculationNotifier extends StateNotifier<OnlineCalculationState> {
-  CalculationNotifier(this._repository) : super(OnlineCalculationState.initial());
+class OnlineCalculationNotifier extends StateNotifier<OnlineCalculationState> {
+  OnlineCalculationNotifier(this._repository) : super(OnlineCalculationState.initial());
 
   final ICalculationRepository _repository;
 

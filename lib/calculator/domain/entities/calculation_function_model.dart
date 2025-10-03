@@ -5,7 +5,7 @@ part 'calculation_function_model.freezed.dart';
 
 /// Domain entity representing a supported calculation function (e.g., add, subtract).
 @freezed
-class CalculationFunctionModel with _$CalculationFunctionModel {
+abstract class CalculationFunctionModel with _$CalculationFunctionModel {
   const factory CalculationFunctionModel({
     required FunctionId id,
     @Default('') String name,

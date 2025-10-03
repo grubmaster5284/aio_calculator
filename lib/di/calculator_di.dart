@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calculator_online/calculator/data/repositories/calculation_repository_impl.dart';
 import 'package:calculator_online/calculator/data/sources/remote/calculation_remote_service.dart';
 import 'package:calculator_online/calculator/domain/repositories/i_calculation_repository.dart';
-import 'package:calculator_online/calculator/domain/services/calculator_engine.dart';
+import 'package:calculator_online/calculator/data/services/calculator_math_engine.dart';
 
 /// Dependency injection container for the calculator module
 /// This isolates data layer dependencies from the application layer
@@ -22,9 +22,9 @@ class CalculatorDI {
     return CalculationRepositoryImpl(ref.watch(calculationRemoteServiceProvider));
   });
 
-  /// Domain calculator engine provider
-  static final calculatorEngineProvider = Provider<CalculatorEngine>((ref) {
-    return const CalculatorEngine();
+  /// Calculator math engine provider (data layer service)
+  static final calculatorEngineProvider = Provider<CalculatorMathEngine>((ref) {
+    return const CalculatorMathEngine();
   });
 }
 

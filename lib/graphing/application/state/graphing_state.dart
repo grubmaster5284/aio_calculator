@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'graphing_state.freezed.dart';
 
 @freezed
-class GraphingState with _$GraphingState {
+abstract class GraphingState with _$GraphingState {
   const GraphingState._();
 
   const factory GraphingState({
