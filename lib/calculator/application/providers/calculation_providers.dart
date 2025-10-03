@@ -1,24 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calculator_online/calculator/application/notifier/calculation_notifier.dart';
 import 'package:calculator_online/calculator/application/state/calculation_state.dart';
-import 'package:calculator_online/calculator/data/repositories/calculation_repository_impl.dart';
-import 'package:calculator_online/calculator/data/sources/remote/calculation_remote_service.dart';
-import 'package:calculator_online/calculator/domain/repositories/i_calculation_repository.dart';
 import 'package:calculator_online/calculator/application/notifier/calculator_ui_notifier.dart';
 import 'package:calculator_online/calculator/application/state/calculator_ui_state.dart';
-import 'package:calculator_online/calculator/domain/services/calculator_engine.dart';
+import 'package:calculator_online/di/calculator_di.dart';
 
-final httpClientProvider = Provider<HttpClient>((ref) {
-  throw UnimplementedError('Provide an HttpClient implementation via override.');
-});
+final httpClientProvider = CalculatorDI.httpClientProvider;
 
-final calculationRemoteServiceProvider = Provider<CalculationRemoteService>((ref) {
-  return CalculationRemoteService(ref.watch(httpClientProvider));
-});
+final calculationRemoteServiceProvider = CalculatorDI.calculationRemoteServiceProvider;
 
-final calculationRepositoryProvider = Provider<ICalculationRepository>((ref) {
-  return CalculationRepositoryImpl(ref.watch(calculationRemoteServiceProvider));
-});
+final calculationRepositoryProvider = CalculatorDI.calculationRepositoryProvider;
 
 final calculationNotifierProvider =
     StateNotifierProvider<CalculationNotifier, CalculationState>((ref) {
@@ -33,8 +24,6 @@ final calculatorUiNotifierProvider =
 });
 
 /// Domain calculator engine provider
-final calculatorEngineProvider = Provider<CalculatorEngine>((ref) {
-  return const CalculatorEngine();
-});
+final calculatorEngineProvider = CalculatorDI.calculatorEngineProvider;
 
 

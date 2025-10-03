@@ -1,4 +1,4 @@
-import 'package:calculator_online/core/result.dart';
+     import 'package:calculator_online/core/result.dart';
 import 'package:calculator_online/graphing/data/sources/graphing_widget_builder.dart';
 import 'package:calculator_online/graphing/domain/entities/graph_config_model.dart';
 import 'package:calculator_online/graphing/domain/entities/graph_embed_model.dart';

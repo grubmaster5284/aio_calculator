@@ -13,6 +13,7 @@ class CalculatorButton extends ConsumerWidget {
   final bool isExpanded;
   final String? superscript;
   final String? subscript;
+  final bool? isCalculatorExpanded;
 
   const CalculatorButton({
     super.key,
@@ -24,6 +25,7 @@ class CalculatorButton extends ConsumerWidget {
     this.isExpanded = false,
     this.superscript,
     this.subscript,
+    this.isCalculatorExpanded,
   });
 
   @override
@@ -105,6 +107,15 @@ class CalculatorButton extends ConsumerWidget {
     if (text == '⌫') {
       return Icon(
         Icons.backspace_outlined,
+        color: _getTextColor(),
+        size: KSize.iconMedium,
+      );
+    }
+    
+    // Special handling for expand/collapse button
+    if (text == '⛶') {
+      return Icon(
+        isCalculatorExpanded == true ? Icons.fullscreen_exit : Icons.fullscreen,
         color: _getTextColor(),
         size: KSize.iconMedium,
       );

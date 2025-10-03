@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../core/constants/k_sizes.dart';
 import '../../../core/widgets/top_nav_bar.dart';
 
@@ -7,6 +8,17 @@ class ConverterModesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Set system UI overlay style for dark theme (consistent with other pages)
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: KColors.backgroundDark,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+
     final tiles = _tiles;
     return Scaffold(
       backgroundColor: KColors.backgroundDark,
@@ -17,21 +29,27 @@ class ConverterModesPage extends StatelessWidget {
               isCalculatorScreen: false,
             ),
             Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: KSize.margin6x,
-                  vertical: KSize.margin6x,
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 32,
-                  crossAxisSpacing: 24,
-                  childAspectRatio: 0.85,
-                ),
-                itemCount: tiles.length,
-                itemBuilder: (context, index) {
-                  final t = tiles[index];
-                  return _ConverterTile(icon: t.icon, label: t.label);
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isLandscape = constraints.maxWidth > constraints.maxHeight;
+                  
+                  return GridView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: KSize.margin6x,
+                      vertical: KSize.margin6x,
+                    ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: isLandscape ? 4 : 3,
+                      mainAxisSpacing: isLandscape ? 24 : 32,
+                      crossAxisSpacing: isLandscape ? 16 : 24,
+                      childAspectRatio: isLandscape ? 1.0 : 0.85,
+                    ),
+                    itemCount: tiles.length,
+                    itemBuilder: (context, index) {
+                      final t = tiles[index];
+                      return _ConverterTile(icon: t.icon, label: t.label);
+                    },
+                  );
                 },
               ),
             ),

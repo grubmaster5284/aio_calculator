@@ -31,10 +31,14 @@ class _WebViewEmbedWidgetState extends State<WebViewEmbedWidget> {
               setState(() => _isLoading = false);
             }
             debugPrint('[webview] onPageFinished: $url');
-            // Ensure scrollbars are hidden at the WebView level
+            // Ensure scrollbars are hidden and content is responsive
             _controller.runJavaScript(
               "document.documentElement.style.overflow='hidden';"
               "document.body.style.overflow='hidden';"
+              "document.body.style.width='100%';"
+              "document.body.style.height='100%';"
+              "document.documentElement.style.width='100%';"
+              "document.documentElement.style.height='100%';"
               "(function(){var s=document.createElement('style');"
               "s.innerHTML='::-webkit-scrollbar{display:none;width:0;height:0}';"
               "document.head.appendChild(s);})();",
@@ -54,6 +58,14 @@ class _WebViewEmbedWidgetState extends State<WebViewEmbedWidget> {
   }
 
   @override
+  void didUpdateWidget(WebViewEmbedWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.htmlContent != widget.htmlContent) {
+      _controller.loadHtmlString(widget.htmlContent);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       fit: StackFit.expand,
@@ -61,7 +73,7 @@ class _WebViewEmbedWidgetState extends State<WebViewEmbedWidget> {
         WebViewWidget(controller: _controller),
         if (_isLoading)
           Container(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             child: const Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

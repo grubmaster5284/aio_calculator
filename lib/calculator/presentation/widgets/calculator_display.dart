@@ -36,6 +36,8 @@ class CalculatorDisplay extends ConsumerWidget {
                   fontSize: KSize.fontLarge,
                 ),
                 textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ),
           // Main display
@@ -53,6 +55,8 @@ class CalculatorDisplay extends ConsumerWidget {
                     fontWeight: FontWeight.w300,
                   ),
                   textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ),

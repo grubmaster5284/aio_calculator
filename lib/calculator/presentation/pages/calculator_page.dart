@@ -62,27 +62,78 @@ class CalculatorPage extends ConsumerWidget {
                   ),
                 ],
               )
-            : Column(
-                children: [
-                  // Unified Navigation Bar
-                  TopNavBar(
-                    isCalculatorScreen: true,
-                    showHistoryButton: true,
-                    onHistoryTap: () {
-                      final current = ref.read(isHistoryOnlyModeProvider);
-                      ref.read(isHistoryOnlyModeProvider.notifier).state = !current;
-                    },
-                  ),
-                  // Display at the top of operations
-                  const CalculatorDisplay(),
-                  // Preview history (max 3 rows)
-                  const CalculatorHistory(),
-                  // Push keypad to bottom regardless of preview height
-                  const Spacer(),
-                  // Divider and keypad at bottom
-                  Container(height: 1, color: KColors.backgroundMedium),
-                  const CalculatorKeypad(),
-                ],
+            : LayoutBuilder(
+                builder: (context, constraints) {
+                  final isLandscape = constraints.maxWidth > constraints.maxHeight;
+                  
+                  if (isLandscape) {
+                    // Landscape layout: side-by-side
+                    return Row(
+                      children: [
+                        // Left side: Display and History
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              TopNavBar(
+                                isCalculatorScreen: true,
+                                showHistoryButton: true,
+                                onHistoryTap: () {
+                                  final current = ref.read(isHistoryOnlyModeProvider);
+                                  ref.read(isHistoryOnlyModeProvider.notifier).state = !current;
+                                },
+                              ),
+                              const CalculatorDisplay(),
+                              Expanded(
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    border: Border(
+                                      right: BorderSide(
+                                        color: KColors.backgroundMedium,
+                                        width: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  child: const CalculatorHistory(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Right side: Keypad
+                        Expanded(
+                          flex: 3,
+                          child: const CalculatorKeypad(),
+                        ),
+                      ],
+                    );
+                  } else {
+                    // Portrait layout: vertical stack
+                    return Column(
+                      children: [
+                        // Unified Navigation Bar
+                        TopNavBar(
+                          isCalculatorScreen: true,
+                          showHistoryButton: true,
+                          onHistoryTap: () {
+                            final current = ref.read(isHistoryOnlyModeProvider);
+                            ref.read(isHistoryOnlyModeProvider.notifier).state = !current;
+                          },
+                        ),
+                        // Display at the top of operations
+                        const CalculatorDisplay(),
+                        // Preview history (max 3 rows) with flexible height
+                        const Flexible(
+                          flex: 1,
+                          child: CalculatorHistory(),
+                        ),
+                        // Divider and keypad at bottom
+                        Container(height: 1, color: KColors.backgroundMedium),
+                        const CalculatorKeypad(),
+                      ],
+                    );
+                  }
+                },
               ),
       ),
     );

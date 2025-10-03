@@ -77,20 +77,22 @@ class CalculatorHistory extends ConsumerWidget {
                 ],
               ),
             ),
-            ListView.builder(
-              reverse: true,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(
-                horizontal: KSize.margin4x,
-                vertical: KSize.margin2x,
+            Flexible(
+              child: ListView.builder(
+                reverse: true,
+                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: KSize.margin4x,
+                  vertical: KSize.margin2x,
+                ),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  // Show items in natural order: most recent at bottom
+                  final item = items[index];
+                  return _buildHistoryItem(ref, item);
+                },
               ),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                // Show items in natural order: most recent at bottom
-                final item = items[index];
-                return _buildHistoryItem(ref, item);
-              },
             ),
           ],
         ),
@@ -138,6 +140,9 @@ class CalculatorHistory extends ConsumerWidget {
                 color: KColors.textSecondary,
                 fontSize: KSize.fontDefault,
               ),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
             const SizedBox(height: KSize.margin1x),
             Text(
@@ -147,6 +152,9 @@ class CalculatorHistory extends ConsumerWidget {
                 fontSize: KSize.fontLarge,
                 fontWeight: FontWeight.w500,
               ),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ],
         ),
