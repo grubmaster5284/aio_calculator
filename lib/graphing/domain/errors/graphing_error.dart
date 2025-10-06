@@ -1,27 +1,13 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'graphing_error.freezed.dart';
+
 /// Domain-specific errors for graphing feature.
-abstract class GraphingError {
-  const GraphingError();
-}
-
-class InvalidExpressionError extends GraphingError {
-  final String message;
-  const InvalidExpressionError(this.message);
-  @override
-  String toString() => 'InvalidExpressionError($message)';
-}
-
-class ConfigurationError extends GraphingError {
-  final String message;
-  const ConfigurationError(this.message);
-  @override
-  String toString() => 'ConfigurationError($message)';
-}
-
-class UnknownGraphingError extends GraphingError {
-  final String message;
-  const UnknownGraphingError(this.message);
-  @override
-  String toString() => 'UnknownGraphingError($message)';
+@freezed
+abstract class GraphingError with _$GraphingError {
+  const factory GraphingError.invalidExpression({required String message}) = InvalidExpressionError;
+  const factory GraphingError.configuration({required String message}) = ConfigurationError;
+  const factory GraphingError.unknown({required String message}) = UnknownGraphingError;
 }
 
 

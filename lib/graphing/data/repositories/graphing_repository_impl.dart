@@ -26,7 +26,7 @@ class GraphingRepositoryImpl implements IGraphingRepository {
       );
       return Result.success(GraphEmbed(html: html));
     } catch (e) {
-      return Result.failure(UnknownGraphingError(e.toString()));
+      return Result.failure(GraphingError.unknown(message: e.toString()));
     }
   }
 }
