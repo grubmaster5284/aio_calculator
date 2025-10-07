@@ -126,7 +126,9 @@ class _CurrencyDropdown extends StatelessWidget {
                       Icons.keyboard_arrow_down,
                       color: KColors.textSecondary,
                     ),
-              items: currencies.map((currency) {
+              items: currencies.where((currency) => 
+                currency.code.value.isNotEmpty && currency.code.value.length >= 3
+              ).map((currency) {
                 return DropdownMenuItem<String>(
                   value: currency.code.value,
                   child: Row(
@@ -141,7 +143,11 @@ class _CurrencyDropdown extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            currency.symbol.isNotEmpty ? currency.symbol : currency.code.value.substring(0, 1),
+                            currency.symbol.isNotEmpty 
+                                ? currency.symbol 
+                                : (currency.code.value.isNotEmpty
+                                    ? currency.code.value.substring(0, 1) 
+                                    : '?'),
                             style: const TextStyle(
                               color: KColors.textPrimary,
                               fontSize: KSize.fontSmall,

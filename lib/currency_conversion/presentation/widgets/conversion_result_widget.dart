@@ -71,7 +71,7 @@ class ConversionResultWidget extends StatelessWidget {
         color: KColors.backgroundMedium,
         borderRadius: BorderRadius.circular(KSize.radiusDefault),
         border: Border.all(
-          color: Colors.red.withOpacity(0.3),
+          color: Colors.red.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -170,9 +170,10 @@ class ConversionResultWidget extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // Header
           const Text(
             'Conversion Result',
@@ -256,6 +257,7 @@ class ConversionResultWidget extends StatelessWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }
@@ -274,7 +276,7 @@ class ConversionResultWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(KSize.radiusSmall),
             border: isHighlighted
                 ? Border.all(
-                    color: KColors.buttonOperator.withOpacity(0.3),
+                    color: KColors.buttonOperator.withValues(alpha: 0.3),
                     width: 1,
                   )
                 : null,

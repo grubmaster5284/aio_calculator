@@ -47,7 +47,11 @@ class ConverterModesPage extends StatelessWidget {
                     itemCount: tiles.length,
                     itemBuilder: (context, index) {
                       final t = tiles[index];
-                      return _ConverterTile(icon: t.icon, label: t.label);
+                      return _ConverterTile(
+                        icon: t.icon, 
+                        label: t.label,
+                        route: t.route,
+                      );
                     },
                   );
                 },
@@ -60,6 +64,7 @@ class ConverterModesPage extends StatelessWidget {
   }
 
   List<_Tile> get _tiles => const [
+        _Tile(Icons.attach_money_outlined, 'Currency', '/converter/currency'),
         _Tile(Icons.cake_outlined, 'Age'),
         _Tile(Icons.crop_3_2_outlined, 'Area'),
         _Tile(Icons.monitor_weight_outlined, 'BMI'),
@@ -78,14 +83,21 @@ class ConverterModesPage extends StatelessWidget {
 class _ConverterTile extends StatelessWidget {
   final IconData icon;
   final String label;
+  final String? route;
 
-  const _ConverterTile({required this.icon, required this.label});
+  const _ConverterTile({
+    required this.icon, 
+    required this.label,
+    this.route,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(KSize.radiusDefault),
-      onTap: () {},
+      onTap: route != null ? () {
+        Navigator.of(context).pushNamed(route!);
+      } : null,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -108,7 +120,8 @@ class _ConverterTile extends StatelessWidget {
 class _Tile {
   final IconData icon;
   final String label;
-  const _Tile(this.icon, this.label);
+  final String? route;
+  const _Tile(this.icon, this.label, [this.route]);
 }
 
 

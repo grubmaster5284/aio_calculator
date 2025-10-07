@@ -29,6 +29,15 @@ class CurrencyEndpoints {
   static const String openExchangeRatesHistorical = '/historical';
   static const String openExchangeRatesCurrencies = '/currencies.json';
 
+  // XE (xecdapi) endpoints
+  static const String xeBaseUrl = 'https://xecdapi.xe.com/v1';
+  // Convert latest rates (from -> to); response supports JSON
+  static const String xeConvertFrom = '/convert_from.json';
+  // Single historical rate for a given date
+  static const String xeHistoricRate = '/historic_rate.json';
+  // List of currency codes/names supported by XE
+  static const String xeCurrencyNames = '/currency_names.json';
+
   /// Build endpoint URL for different services
   static String buildLatestUrl(String baseUrl, String latestPath) {
     return '$baseUrl$latestPath';
@@ -40,5 +49,18 @@ class CurrencyEndpoints {
 
   static String buildSymbolsUrl(String baseUrl, String symbolsPath) {
     return '$baseUrl$symbolsPath';
+  }
+
+  // XE URL builders
+  static String buildXeConvertFromUrl([String baseUrl = xeBaseUrl]) {
+    return '$baseUrl$xeConvertFrom';
+  }
+
+  static String buildXeHistoricRateUrl([String baseUrl = xeBaseUrl]) {
+    return '$baseUrl$xeHistoricRate';
+  }
+
+  static String buildXeCurrencyNamesUrl([String baseUrl = xeBaseUrl]) {
+    return '$baseUrl$xeCurrencyNames';
   }
 }

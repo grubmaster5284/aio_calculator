@@ -27,7 +27,7 @@ class SwapButtonWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(KSize.radiusCircular),
             boxShadow: [
               BoxShadow(
-                color: KColors.buttonOperator.withOpacity(0.3),
+                color: KColors.buttonOperator.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),

@@ -31,7 +31,9 @@ class CurrencyCacheService {
       final rates = await getCachedRates();
       rates[rate.key] = rate;
       await _saveRates(rates);
+      print('[CurrencyCacheService] Cached rate with key: ${rate.key}, rate: ${rate.rateAsDouble}');
     } catch (e) {
+      print('[CurrencyCacheService] Failed to cache rate: $e');
       // Silently fail - caching is not critical
     }
   }
@@ -46,12 +48,20 @@ class CurrencyCacheService {
       final key = '${from.value}_${to.value}';
       final rate = rates[key];
       
+      // Debug logging
+      print('[CurrencyCacheService] Looking for rate with key: $key');
+      print('[CurrencyCacheService] Available rate keys: ${rates.keys.toList()}');
+      print('[CurrencyCacheService] Found rate: ${rate != null}');
+      
       if (rate != null && _isRateValid(rate)) {
+        print('[CurrencyCacheService] Rate is valid: ${rate.rateAsDouble}');
         return Result.success(rate);
       }
       
+      print('[CurrencyCacheService] Rate not found or invalid');
       return const Result.failure(ConversionError.notFound());
     } catch (e) {
+      print('[CurrencyCacheService] Exception in getCachedRate: $e');
       return Result.failure(ConversionError.unknown(e.toString()));
     }
   }

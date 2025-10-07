@@ -101,9 +101,9 @@ class CalculatorPage extends ConsumerWidget {
                           ),
                         ),
                         // Right side: Keypad
-                        Expanded(
+                        const Expanded(
                           flex: 3,
-                          child: const CalculatorKeypad(),
+                          child: CalculatorKeypad(),
                         ),
                       ],
                     );

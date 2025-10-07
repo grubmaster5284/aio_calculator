@@ -10,7 +10,6 @@ import 'package:calculator_online/currency_conversion/domain/value_objects/conve
 import 'package:calculator_online/currency_conversion/domain/value_objects/currency_code_vo.dart';
 import 'package:calculator_online/currency_conversion/data/sources/local/currency_cache_service.dart';
 import 'package:calculator_online/currency_conversion/data/sources/remote/i_currency_api_service.dart';
-import 'package:calculator_online/currency_conversion/data/sources/remote/standalone_exchangerate_service.dart';
 import 'package:calculator_online/currency_conversion/data/constants/default_currencies.dart';
 
 /// Repository implementation with fallback strategy
@@ -35,8 +34,8 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
   }) async {
     developer.log('[CurrencyRepository] Converting ${amount.toDouble()} ${from.value} to ${to.value}', name: 'CurrencyRepository');
     try {
-      // Use the direct conversion endpoint from XE API
-      developer.log('[CurrencyRepository] Calling direct conversion API...', name: 'CurrencyRepository');
+      // Try to get data from API first
+      developer.log('[CurrencyRepository] Calling conversion API...', name: 'CurrencyRepository');
       final conversionResult = await _apiService.fetchConversion(
         from: from,
         to: to,
@@ -46,9 +45,9 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
 
       if (conversionResult.isSuccess) {
         final result = conversionResult.value!;
-        developer.log('[CurrencyRepository] Direct conversion successful: ${result.amountOutAsDouble}', name: 'CurrencyRepository');
+        developer.log('[CurrencyRepository] Conversion successful: ${result.amountOutAsDouble}', name: 'CurrencyRepository');
         
-        // Check if this looks like test data
+        // Cache the rate for future offline use
         final rate = RateModel(
           baseCurrencyCode: from,
           quoteCurrencyCode: to,
@@ -56,29 +55,24 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
           rateScale: result.rateScale,
           timestamp: DateTime.now(),
         );
-        
-        if (_isTestData(rate)) {
-          developer.log('[CurrencyRepository] Detected test data in conversion, trying fallback service...', name: 'CurrencyRepository');
-          return await _tryFallbackConversion(from: from, to: to, amount: amount, at: at);
-        }
-        
-        // Cache the rate for future use
         await _cacheService.cacheRate(rate);
         
         return Result.success(result);
       } else {
-        developer.log('[CurrencyRepository] Direct conversion failed: ${conversionResult.error}', name: 'CurrencyRepository');
-        // Fallback to cached rate if available
-        developer.log('[CurrencyRepository] Trying cached rate...', name: 'CurrencyRepository');
+        // API failed, fallback to cached rate
+        developer.log('[CurrencyRepository] API conversion failed: ${conversionResult.error}', name: 'CurrencyRepository');
+        developer.log('[CurrencyRepository] Trying cached rate as fallback...', name: 'CurrencyRepository');
+        
         final cachedRateResult = await _cacheService.getCachedRate(
           from: from,
           to: to,
         );
         
-        developer.log('[CurrencyRepository] Cached rate result - isSuccess: ${cachedRateResult.isSuccess}', name: 'CurrencyRepository');
         if (cachedRateResult.isSuccess) {
           final cachedRate = cachedRateResult.value!;
           developer.log('[CurrencyRepository] Using cached rate: ${cachedRate.rateAsDouble}', name: 'CurrencyRepository');
+          
+          // Perform conversion using cached rate
           final convertedAmount = amount.toDouble() * cachedRate.rateAsDouble;
           const scale = 6;
           final amountOutScaled = BigInt.from((convertedAmount * BigInt.from(10).pow(scale).toDouble()).round());
@@ -91,13 +85,13 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
             amountInScaled: amount.scaledValue,
             amountScale: amount.scale,
             amountOutScaled: amountOutScaled,
-            timestamp: DateTime.now(),
+            timestamp: cachedRate.timestamp,
           );
           
           developer.log('[CurrencyRepository] Conversion successful with cached rate: ${result.amountOutAsDouble}', name: 'CurrencyRepository');
           return Result.success(result);
         } else {
-          developer.log('[CurrencyRepository] No cached rate available, returning error: ${conversionResult.error}', name: 'CurrencyRepository');
+          developer.log('[CurrencyRepository] No cached rate available, conversion failed', name: 'CurrencyRepository');
           return Result.failure(conversionResult.error!);
         }
       }
@@ -167,17 +161,12 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
         final rate = remoteResult.value!;
         developer.log('[CurrencyRepository] Rate fetched from remote: ${rate.rateAsDouble}', name: 'CurrencyRepository');
         
-        // Check if this looks like test data (common test values)
-        if (_isTestData(rate)) {
-          developer.log('[CurrencyRepository] Detected test data, trying fallback service...', name: 'CurrencyRepository');
-          return await _tryFallbackService(from: from, to: to, at: at);
-        }
-        
-        // Cache the fresh rate
+        // Cache the rate for future offline use
         await _cacheService.cacheRate(rate);
         
         return Result.success(rate);
       } else {
+        // API failed, fallback to cached rate
         developer.log('[CurrencyRepository] Remote rate failed: ${remoteResult.error}', name: 'CurrencyRepository');
         // Only fall back to cache if remote fails
         developer.log('[CurrencyRepository] Trying cached rate as fallback...', name: 'CurrencyRepository');
@@ -262,6 +251,7 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
         to: to,
       );
       
+      developer.log('[CurrencyRepository] Cached rate result - isSuccess: ${cachedRateResult.isSuccess}', name: 'CurrencyRepository');
       if (cachedRateResult.isSuccess) {
         final cachedRate = cachedRateResult.value!;
         developer.log('[CurrencyRepository] Using cached rate for offline conversion: ${cachedRate.rateAsDouble}', name: 'CurrencyRepository');
@@ -285,7 +275,7 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
         developer.log('[CurrencyRepository] Offline conversion successful: ${result.amountOutAsDouble}', name: 'CurrencyRepository');
         return Result.success(result);
       } else {
-        developer.log('[CurrencyRepository] No cached rate available for offline conversion', name: 'CurrencyRepository');
+        developer.log('[CurrencyRepository] No cached rate available for offline conversion: ${cachedRateResult.error}', name: 'CurrencyRepository');
         return const Result.failure(ConversionError.notFound());
       }
     } catch (e) {
@@ -326,6 +316,7 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
       int cachedRatesCount = 0;
       for (final pair in commonPairs) {
         try {
+          developer.log('[CurrencyRepository] Fetching rate for ${pair['from']}/${pair['to']}...', name: 'CurrencyRepository');
           final rateResult = await _apiService.fetchRate(
             from: CurrencyCode(pair['from']!),
             to: CurrencyCode(pair['to']!),
@@ -333,6 +324,9 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
           if (rateResult.isSuccess) {
             await _cacheService.cacheRate(rateResult.value!);
             cachedRatesCount++;
+            developer.log('[CurrencyRepository] Successfully cached rate for ${pair['from']}/${pair['to']}: ${rateResult.value!.rateAsDouble}', name: 'CurrencyRepository');
+          } else {
+            developer.log('[CurrencyRepository] Failed to fetch rate for ${pair['from']}/${pair['to']}: ${rateResult.error}', name: 'CurrencyRepository');
           }
         } catch (e) {
           // Skip failed rates, continue with others
@@ -399,94 +393,4 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
     }
   }
 
-  /// Check if the rate looks like test data
-  bool _isTestData(RateModel rate) {
-    final rateValue = rate.rateAsDouble;
-    // Common test values that indicate mock data
-    const testValues = [1.2345, 1.0, 0.85, 0.92, 1.1, 1.2, 1.3, 1.4, 1.5];
-    return testValues.contains(rateValue);
-  }
-
-  /// Try fallback service when primary service returns test data
-  Future<Result<RateModel, ConversionError>> _tryFallbackService({
-    required CurrencyCode from,
-    required CurrencyCode to,
-    ConversionDate? at,
-  }) async {
-    try {
-      developer.log('[CurrencyRepository] Trying ExchangerateApiService as fallback...', name: 'CurrencyRepository');
-      // Create ExchangerateApiService with hardcoded configuration for fallback
-      final fallbackService = _createFallbackService();
-      final fallbackResult = await fallbackService.fetchRate(
-        from: from,
-        to: to,
-        at: at,
-      );
-      
-      if (fallbackResult.isSuccess) {
-        final rate = fallbackResult.value!;
-        developer.log('[CurrencyRepository] Fallback service successful: ${rate.rateAsDouble}', name: 'CurrencyRepository');
-        
-        // Cache the real rate
-        await _cacheService.cacheRate(rate);
-        
-        return Result.success(rate);
-      } else {
-        developer.log('[CurrencyRepository] Fallback service also failed: ${fallbackResult.error}', name: 'CurrencyRepository');
-        return Result.failure(fallbackResult.error!);
-      }
-    } catch (e) {
-      developer.log('[CurrencyRepository] Fallback service exception: $e', name: 'CurrencyRepository');
-      return Result.failure(ConversionError.unknown(e.toString()));
-    }
-  }
-
-  /// Try fallback conversion when primary service returns test data
-  Future<Result<ConversionResultModel, ConversionError>> _tryFallbackConversion({
-    required CurrencyCode from,
-    required CurrencyCode to,
-    required Amount amount,
-    ConversionDate? at,
-  }) async {
-    try {
-      developer.log('[CurrencyRepository] Trying ExchangerateApiService for conversion...', name: 'CurrencyRepository');
-      final fallbackService = _createFallbackService();
-      final fallbackResult = await fallbackService.fetchConversion(
-        from: from,
-        to: to,
-        amount: amount,
-        at: at,
-      );
-      
-      if (fallbackResult.isSuccess) {
-        final result = fallbackResult.value!;
-        developer.log('[CurrencyRepository] Fallback conversion successful: ${result.amountOutAsDouble}', name: 'CurrencyRepository');
-        
-        // Cache the rate for future use
-        final rate = RateModel(
-          baseCurrencyCode: from,
-          quoteCurrencyCode: to,
-          rateScaled: result.rateScaled,
-          rateScale: result.rateScale,
-          timestamp: DateTime.now(),
-        );
-        await _cacheService.cacheRate(rate);
-        
-        return Result.success(result);
-      } else {
-        developer.log('[CurrencyRepository] Fallback conversion also failed: ${fallbackResult.error}', name: 'CurrencyRepository');
-        return Result.failure(fallbackResult.error!);
-      }
-    } catch (e) {
-      developer.log('[CurrencyRepository] Fallback conversion exception: $e', name: 'CurrencyRepository');
-      return Result.failure(ConversionError.unknown(e.toString()));
-    }
-  }
-
-  /// Create a standalone ExchangerateApiService for fallback
-  StandaloneExchangerateService _createFallbackService() {
-    // Create standalone service with hardcoded configuration
-    // This ensures it doesn't use the XE API configuration
-    return StandaloneExchangerateService();
-  }
 }

@@ -36,12 +36,12 @@ class CalculatorKeypad extends ConsumerWidget {
       builder: (context, constraints) {
         // Calculate available height and adjust button spacing
         final availableHeight = constraints.maxHeight;
-        final buttonHeight = KSize.buttonHeightCalculator;
-        final spacing = KSize.buttonSpacing;
-        final padding = KSize.margin2x * 2; // top and bottom padding
+        const buttonHeight = KSize.buttonHeightCalculator;
+        const spacing = KSize.buttonSpacing;
+        const padding = KSize.margin2x * 2; // top and bottom padding
         
         // Calculate how much space we need for 5 rows
-        final requiredHeight = (buttonHeight * 5) + (spacing * 4) + padding;
+        const requiredHeight = (buttonHeight * 5) + (spacing * 4) + padding;
         final adjustedSpacing = availableHeight > requiredHeight 
             ? spacing 
             : (availableHeight - padding - (buttonHeight * 5)) / 4;
@@ -463,9 +463,9 @@ class CalculatorKeypad extends ConsumerWidget {
     final isDegrees = ref.watch(calculatorUiStateNotifierProvider).isDegreesMode;
     
     // Calculate how many rows we can fit
-    final buttonHeight = KSize.buttonHeightCalculatorExpanded;
-    final spacing = KSize.expandedButtonSpacing;
-    final padding = KSize.margin2x * 2; // top and bottom padding
+    const buttonHeight = KSize.buttonHeightCalculatorExpanded;
+    const spacing = KSize.expandedButtonSpacing;
+    const padding = KSize.margin2x * 2; // top and bottom padding
     final maxRows = ((availableHeight - padding) / (buttonHeight + spacing)).floor();
     
     // Limit to essential rows for landscape

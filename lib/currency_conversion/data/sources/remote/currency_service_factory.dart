@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'exchangerate_api_service.dart';
+import 'xe_api_service.dart';
 import 'i_currency_api_service.dart';
 
 /// Factory for creating currency service instances based on environment configuration
@@ -15,12 +16,6 @@ class CurrencyServiceFactory {
 
   /// Create currency service based on environment configuration
   static ICurrencyApiService createService() {
-    // Temporarily hardcode to use ExchangerateApiService to bypass environment issues
-    developer.log('[CurrencyServiceFactory] FORCING ExchangerateApiService (bypassing environment)', name: 'CurrencyServiceFactory');
-    return ExchangerateApiService();
-    
-    // Original logic (commented out for debugging)
-    /*
     final provider = _getServiceProvider();
     developer.log('[CurrencyServiceFactory] Creating service for provider: $provider', name: 'CurrencyServiceFactory');
     
@@ -30,14 +25,12 @@ class CurrencyServiceFactory {
         return ExchangerateApiService();
       case 'xe':
         developer.log('[CurrencyServiceFactory] Creating XeApiService', name: 'CurrencyServiceFactory');
-        // Check if XE API is returning test data and fallback to exchangerate-api
         return XeApiService();
       default:
         developer.log('[CurrencyServiceFactory] Using default ExchangerateApiService', name: 'CurrencyServiceFactory');
         // Default to exchangerate-api for reliable real-time data
         return ExchangerateApiService();
     }
-    */
   }
 
   /// Get service provider from environment
@@ -45,9 +38,17 @@ class CurrencyServiceFactory {
     try {
       final provider = dotenv.env['CURRENCY_SERVICE_PROVIDER'];
       developer.log('[CurrencyServiceFactory] Environment CURRENCY_SERVICE_PROVIDER: $provider', name: 'CurrencyServiceFactory');
-      if (provider != null && supportedProviders.contains(provider)) {
-        developer.log('[CurrencyServiceFactory] Using provider from environment: $provider', name: 'CurrencyServiceFactory');
-        return provider;
+      developer.log('[CurrencyServiceFactory] Supported providers: $supportedProviders', name: 'CurrencyServiceFactory');
+      
+      // Normalize the provider to lowercase for case-insensitive comparison
+      final normalizedProvider = provider?.toLowerCase();
+      developer.log('[CurrencyServiceFactory] Normalized provider: $normalizedProvider', name: 'CurrencyServiceFactory');
+      
+      if (normalizedProvider != null && supportedProviders.contains(normalizedProvider)) {
+        developer.log('[CurrencyServiceFactory] Using provider from environment: $normalizedProvider', name: 'CurrencyServiceFactory');
+        return normalizedProvider;
+      } else {
+        developer.log('[CurrencyServiceFactory] Provider "$normalizedProvider" not supported or null, using default: $_defaultProvider', name: 'CurrencyServiceFactory');
       }
     } catch (e) {
       developer.log('[CurrencyServiceFactory] Error loading environment: $e', name: 'CurrencyServiceFactory');
@@ -65,11 +66,11 @@ class CurrencyServiceFactory {
     switch (provider) {
       case 'exchangerate_api':
         final key = dotenv.env['EXCHANGERATE_API_KEY'];
-        developer.log('[CurrencyServiceFactory] EXCHANGERATE_API_KEY: ${key?.substring(0, 4)}...', name: 'CurrencyServiceFactory');
+        developer.log('[CurrencyServiceFactory] EXCHANGERATE_API_KEY: ${key != null && key.length >= 4 ? '${key.substring(0, 4)}...' : key}', name: 'CurrencyServiceFactory');
         return key;
       case 'xe':
         final key = dotenv.env['XE_API_KEY'];
-        developer.log('[CurrencyServiceFactory] XE_API_KEY: ${key?.substring(0, 4)}...', name: 'CurrencyServiceFactory');
+        developer.log('[CurrencyServiceFactory] XE_API_KEY: ${key != null && key.length >= 4 ? '${key.substring(0, 4)}...' : key}', name: 'CurrencyServiceFactory');
         return key;
       default:
         return null;

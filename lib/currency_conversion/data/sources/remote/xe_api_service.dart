@@ -14,6 +14,7 @@ import 'package:calculator_online/currency_conversion/domain/value_objects/conve
 import 'package:calculator_online/currency_conversion/domain/value_objects/currency_code_vo.dart';
 import 'package:calculator_online/currency_conversion/data/sources/remote/currency_service_factory.dart';
 import 'package:calculator_online/currency_conversion/data/sources/remote/i_currency_api_service.dart';
+import 'package:calculator_online/currency_conversion/data/constants/currency_endpoints.dart';
 
 /// XE Currency Data API v1 implementation
 /// Docs: https://xecdapi.xe.com/docs/v1
@@ -50,7 +51,7 @@ class XeApiService implements ICurrencyApiService {
       
       // Use the correct XE API endpoint for live rates
       // Use convert_from.json without date parameter for live rates
-      final uri = Uri.parse('$_baseUrl/convert_from.json').replace(queryParameters: {
+      final uri = Uri.parse(CurrencyEndpoints.buildXeConvertFromUrl(_baseUrl)).replace(queryParameters: {
         'from': from.value,
         'to': to.value,
         'amount': '1',
@@ -136,7 +137,7 @@ class XeApiService implements ICurrencyApiService {
           'date': '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
       };
       
-      final uri = Uri.parse('$_baseUrl/convert_from.json').replace(queryParameters: query);
+      final uri = Uri.parse(CurrencyEndpoints.buildXeConvertFromUrl(_baseUrl)).replace(queryParameters: query);
       developer.log('[XE API] Request URI: $uri', name: 'XeApiService');
       
       final response = await _makeRequestWithRetry(() => _client
@@ -187,7 +188,7 @@ class XeApiService implements ICurrencyApiService {
   Future<Result<List<CurrencyModel>, ConversionError>> fetchCurrencies() async {
     try {
       // XE provides a /currencies endpoint in some plans; fallback to common ISO list is out of scope
-      final uri = Uri.parse('$_baseUrl/currencies.json');
+      final uri = Uri.parse(CurrencyEndpoints.buildXeCurrencyNamesUrl(_baseUrl));
       final response = await _makeRequestWithRetry(() => _client
           .get(uri, headers: _getHeaders())
           .timeout(Duration(milliseconds: _timeout)));
@@ -274,7 +275,7 @@ class XeApiService implements ICurrencyApiService {
         'amount': '1', // XE API requires an amount parameter
         'date': '${date.value.year}-${date.value.month.toString().padLeft(2, '0')}-${date.value.day.toString().padLeft(2, '0')}',
       };
-      final uri = Uri.parse('$_baseUrl/historic_rate/period.json').replace(queryParameters: query);
+      final uri = Uri.parse(CurrencyEndpoints.buildXeHistoricRateUrl(_baseUrl)).replace(queryParameters: query);
       final response = await _makeRequestWithRetry(() => _client
           .get(uri, headers: _getHeaders())
           .timeout(Duration(milliseconds: _timeout)));
