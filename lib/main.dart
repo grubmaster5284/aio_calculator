@@ -5,16 +5,30 @@ import 'calculator/presentation/pages/calculator_page.dart';
 import 'converters/presentation/pages/converter_modes_page.dart';
 import 'core/constants/k_sizes.dart';
 import 'graphing/presentation/pages/graphing_page.dart';
+import 'currency_conversion/presentation/pages/currency_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'currency_conversion/application/providers/currency_providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
-  // Debug logging to verify .env is loaded
-  final hasKey = dotenv.env['DESMOS_API_KEY'] != null && dotenv.env['DESMOS_API_KEY']!.isNotEmpty;
-  debugPrint('[dotenv] loaded: DESMOS_API_KEY present: $hasKey');
+  // Load .env file
+  try {
+    await dotenv.load(fileName: '.env');
+    debugPrint('[Main] .env loaded successfully');
+    debugPrint('[Main] CURRENCY_SERVICE_PROVIDER: ${dotenv.env['CURRENCY_SERVICE_PROVIDER']}');
+  } catch (e) {
+    debugPrint('[Main] Error loading .env: $e');
+    // ignore if .env is missing; app can still run with defaults
+  }
+  // Initialize SharedPreferences before starting the app
+  final sharedPrefs = await SharedPreferences.getInstance();
+
   runApp(
-    const ProviderScope(
-      child: CalculatorApp(),
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPrefs),
+      ],
+      child: const CalculatorApp(),
     ),
   );
 }
@@ -43,6 +57,7 @@ class CalculatorApp extends StatelessWidget {
         '/': (context) => const CalculatorPage(),
         '/converter': (context) => const ConverterModesPage(),
         '/graphing': (context) => const GraphingPage(),
+        '/converter/currency': (context) => const CurrencyPage(),
       },
     );
   }
