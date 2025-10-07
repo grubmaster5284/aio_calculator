@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,9 +32,9 @@ class CurrencyCacheService {
       final rates = await getCachedRates();
       rates[rate.key] = rate;
       await _saveRates(rates);
-      print('[CurrencyCacheService] Cached rate with key: ${rate.key}, rate: ${rate.rateAsDouble}');
+      developer.log('[CurrencyCacheService] Cached rate with key: ${rate.key}, rate: ${rate.rateAsDouble}', name: 'CurrencyCacheService');
     } catch (e) {
-      print('[CurrencyCacheService] Failed to cache rate: $e');
+      developer.log('[CurrencyCacheService] Failed to cache rate: $e', name: 'CurrencyCacheService');
       // Silently fail - caching is not critical
     }
   }
@@ -49,19 +50,19 @@ class CurrencyCacheService {
       final rate = rates[key];
       
       // Debug logging
-      print('[CurrencyCacheService] Looking for rate with key: $key');
-      print('[CurrencyCacheService] Available rate keys: ${rates.keys.toList()}');
-      print('[CurrencyCacheService] Found rate: ${rate != null}');
+      developer.log('[CurrencyCacheService] Looking for rate with key: $key', name: 'CurrencyCacheService');
+      developer.log('[CurrencyCacheService] Available rate keys: ${rates.keys.toList()}', name: 'CurrencyCacheService');
+      developer.log('[CurrencyCacheService] Found rate: ${rate != null}', name: 'CurrencyCacheService');
       
       if (rate != null && _isRateValid(rate)) {
-        print('[CurrencyCacheService] Rate is valid: ${rate.rateAsDouble}');
+        developer.log('[CurrencyCacheService] Rate is valid: ${rate.rateAsDouble}', name: 'CurrencyCacheService');
         return Result.success(rate);
       }
       
-      print('[CurrencyCacheService] Rate not found or invalid');
+      developer.log('[CurrencyCacheService] Rate not found or invalid', name: 'CurrencyCacheService');
       return const Result.failure(ConversionError.notFound());
     } catch (e) {
-      print('[CurrencyCacheService] Exception in getCachedRate: $e');
+      developer.log('[CurrencyCacheService] Exception in getCachedRate: $e', name: 'CurrencyCacheService');
       return Result.failure(ConversionError.unknown(e.toString()));
     }
   }
