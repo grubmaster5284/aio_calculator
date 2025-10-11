@@ -81,11 +81,31 @@ jobs:
     - name: Build macOS
       run: flutter build macos --release
       
+    - name: Create DMG
+      run: |
+        # Install create-dmg for proper DMG creation
+        brew install create-dmg
+        
+        # Create DMG
+        create-dmg \
+          --volname "AIO Calculator" \
+          --volicon "build/macos/Build/Products/Release/AIO Calculator.app/Contents/Resources/AppIcon.icns" \
+          --window-pos 200 120 \
+          --window-size 600 300 \
+          --icon-size 100 \
+          --icon "AIO Calculator.app" 175 120 \
+          --hide-extension "AIO Calculator.app" \
+          --app-drop-link 425 120 \
+          "aio-calculator-macos.dmg" \
+          "build/macos/Build/Products/Release/"
+      
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v4
       with:
         name: macos-release
-        path: build/macos/Build/Products/Release/AIO Calculator.app
+        path: |
+          build/macos/Build/Products/Release/AIO Calculator.app
+          aio-calculator-macos.dmg
 
   build-linux:
     runs-on: ubuntu-latest
@@ -178,32 +198,29 @@ jobs:
         
     - name: Create release archives
       run: |
-        # Android
-        cd artifacts/android-release
-        zip -r ../../aio-calculator-android.zip .
-        cd ../..
+        # Android - Create separate APK and AAB files
+        cp artifacts/android-release/app-release.apk aio-calculator-android.apk
+        cp artifacts/android-release/app-release.aab aio-calculator-android.aab
         
-        # iOS
+        # iOS - Create IPA file (requires macOS for proper signing)
         cd artifacts/ios-release
-        zip -r ../../aio-calculator-ios.zip .
+        zip -r ../../aio-calculator-ios.ipa .
         cd ../..
         
-        # macOS
-        cd artifacts/macos-release
-        zip -r ../../aio-calculator-macos.zip .
-        cd ../..
+        # macOS - Use the pre-created DMG file
+        cp artifacts/macos-release/aio-calculator-macos.dmg .
         
-        # Linux
+        # Linux - Create AppImage or tar.gz
         cd artifacts/linux-release
         tar -czf ../../aio-calculator-linux.tar.gz .
         cd ../..
         
-        # Windows
+        # Windows - Create installer or zip
         cd artifacts/windows-release
         zip -r ../../aio-calculator-windows.zip .
         cd ../..
         
-        # Web
+        # Web - Create deployable zip
         cd artifacts/web-release
         zip -r ../../aio-calculator-web.zip .
         cd ../..
@@ -212,9 +229,10 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          aio-calculator-android.zip
-          aio-calculator-ios.zip
-          aio-calculator-macos.zip
+          aio-calculator-android.apk
+          aio-calculator-android.aab
+          aio-calculator-ios.ipa
+          aio-calculator-macos.dmg
           aio-calculator-linux.tar.gz
           aio-calculator-windows.zip
           aio-calculator-web.zip
