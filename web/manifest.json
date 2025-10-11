@@ -1,11 +1,11 @@
 {
-    "name": "calculator_online",
-    "short_name": "calculator_online",
+    "name": "AIO Calculator",
+    "short_name": "AIO Calculator",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "AIO Calculator - A comprehensive Flutter calculator app with online mathematical services integration.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

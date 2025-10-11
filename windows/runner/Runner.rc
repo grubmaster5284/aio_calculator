@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "calculator_online" "\0"
+            VALUE "CompanyName", "AIO Calculator" "\0"
+            VALUE "FileDescription", "AIO Calculator" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "calculator_online" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "calculator_online.exe" "\0"
-            VALUE "ProductName", "calculator_online" "\0"
+            VALUE "InternalName", "aio_calculator" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 AIO Calculator. All rights reserved." "\0"
+            VALUE "OriginalFilename", "aio_calculator.exe" "\0"
+            VALUE "ProductName", "AIO Calculator" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

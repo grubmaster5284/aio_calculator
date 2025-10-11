@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.calculator_online"
+    namespace = "com.aio.calculator"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "29.0.14033849"
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.calculator_online"
+        applicationId = "com.aio.calculator"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

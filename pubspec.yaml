@@ -1,5 +1,5 @@
 name: calculator_online
-description: "A Flutter calculator app with online mathematical services integration."
+description: "AIO Calculator - A comprehensive Flutter calculator app with online mathematical services integration."
 publish_to: 'none'
 
 version: 1.0.0+1
