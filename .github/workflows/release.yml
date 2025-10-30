@@ -24,6 +24,19 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Accept Android SDK licenses and install required NDK
+        shell: bash
+        env:
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+        run: |
+          SDKMANAGER="${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            echo "sdkmanager not found at $SDKMANAGER" >&2
+            exit 1
+          fi
+          yes | "$SDKMANAGER" --licenses
+          "$SDKMANAGER" "ndk;29.0.14033849"
+
       - name: Flutter Pub Get
         run: flutter pub get
 
