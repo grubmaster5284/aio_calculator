@@ -16,7 +16,7 @@ abstract class GraphingState with _$GraphingState {
     String? errorMessage,
   }) = _GraphingState;
 
-  bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
+  bool get hasError => errorMessage?.isNotEmpty ?? false;
 
   factory GraphingState.initial() => const GraphingState();
 }

@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:calculator_online/calculator/application/notifier/online_calculation_notifier.dart';
+import 'package:calculator_online/calculator/application/state/online_calculation_notifier.dart';
 import 'package:calculator_online/calculator/application/state/online_calculation_state.dart';
-import 'package:calculator_online/calculator/application/notifier/calculator_ui_notifier.dart';
+import 'package:calculator_online/calculator/application/state/calculator_ui_notifier.dart';
 import 'package:calculator_online/calculator/application/state/calculator_ui_state.dart';
-import 'package:calculator_online/di/calculator_module_di.dart';
+import 'package:calculator_online/core/di/calculator_di.dart';
 
-final httpClientProvider = CalculatorModuleDI.httpClientProvider;
+final httpClientProvider = CalculatorDI.httpClientProvider;
 
-final calculationRemoteServiceProvider = CalculatorModuleDI.calculationRemoteServiceProvider;
+final calculationRemoteServiceProvider = CalculatorDI.calculationRemoteServiceProvider;
 
-final calculationRepositoryProvider = CalculatorModuleDI.calculationRepositoryProvider;
+final calculationRepositoryProvider = CalculatorDI.calculationRepositoryProvider;
 
 final onlineCalculationNotifierProvider =
     StateNotifierProvider<OnlineCalculationNotifier, OnlineCalculationState>((ref) {
@@ -24,6 +24,6 @@ final calculatorUiStateNotifierProvider =
 });
 
 /// Domain calculator engine provider
-final calculatorEngineServiceProvider = CalculatorModuleDI.calculatorEngineServiceProvider;
+final calculatorEngineServiceProvider = CalculatorDI.calculatorEngineServiceProvider;
 
 

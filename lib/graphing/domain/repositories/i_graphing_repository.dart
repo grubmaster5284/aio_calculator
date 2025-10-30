@@ -9,5 +9,3 @@ abstract class IGraphingRepository {
   /// Returns HTML wrapped in [GraphEmbed] or a [GraphingError] on failure.
   Future<Result<GraphEmbed, GraphingError>> buildEmbed(GraphConfig config);
 }
-
-

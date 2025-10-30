@@ -8,16 +8,17 @@ import 'graphing/presentation/pages/graphing_page.dart';
 import 'currency_conversion/presentation/pages/currency_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'currency_conversion/application/providers/currency_providers.dart';
+import 'core/logging/logger.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Load .env file
   try {
     await dotenv.load(fileName: '.env');
-    debugPrint('[Main] .env loaded successfully');
-    debugPrint('[Main] CURRENCY_SERVICE_PROVIDER: ${dotenv.env['CURRENCY_SERVICE_PROVIDER']}');
+    AppLogger.init('.env loaded successfully');
+    AppLogger.init('CURRENCY_SERVICE_PROVIDER: ${dotenv.env['CURRENCY_SERVICE_PROVIDER']}');
   } catch (e) {
-    debugPrint('[Main] Error loading .env: $e');
+    AppLogger.error('Error loading .env: $e');
     // ignore if .env is missing; app can still run with defaults
   }
   // Initialize SharedPreferences before starting the app

@@ -15,7 +15,7 @@ abstract class OnlineCalculationState with _$OnlineCalculationState {
 
   const OnlineCalculationState._();
 
-  bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
+  bool get hasError => errorMessage?.isNotEmpty ?? false;
 
   factory OnlineCalculationState.initial() => const OnlineCalculationState();
 }

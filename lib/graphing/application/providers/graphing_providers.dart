@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/foundation.dart';
-import 'package:calculator_online/graphing/application/notifier/graphing_notifier.dart';
+import 'package:calculator_online/graphing/application/state/graphing_notifier.dart';
 import 'package:calculator_online/graphing/application/state/graphing_state.dart';
 import 'package:calculator_online/graphing/domain/entities/graph_config_model.dart';
 import 'package:calculator_online/graphing/domain/entities/graph_embed_model.dart';
 import 'package:calculator_online/graphing/domain/value_objects/graph_expression_vo.dart';
-import 'package:calculator_online/di/graphing_di.dart';
+import 'package:calculator_online/core/di/graphing_di.dart';
+import 'package:calculator_online/core/logging/logger.dart';
 
 final graphingNotifierProvider =
     StateNotifierProvider<GraphingNotifier, GraphingState>((ref) {
@@ -34,7 +34,7 @@ final graphingEmbedProvider = FutureProvider<GraphEmbed>((ref) async {
   final result = await repository.buildEmbed(config);
   if (result.isSuccess) {
     final embed = result.requireValue;
-    debugPrint('[graphing] Embed HTML length: ${embed.html.length}');
+    AppLogger.graphing('Embed HTML length: ${embed.html.length}');
     return embed;
   }
 
