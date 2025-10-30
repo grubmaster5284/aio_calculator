@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:calculator_online/core/logging/logger.dart';
 
 /// Renders provided HTML content inside a real WebView (cross-platform).
 class WebViewEmbedWidget extends StatefulWidget {
@@ -24,13 +25,13 @@ class _WebViewEmbedWidgetState extends State<WebViewEmbedWidget> {
         NavigationDelegate(
           onPageStarted: (url) {
             setState(() => _isLoading = true);
-            debugPrint('[webview] onPageStarted: $url');
+            AppLogger.webview('onPageStarted: $url');
           },
           onPageFinished: (url) {
             if (mounted) {
               setState(() => _isLoading = false);
             }
-            debugPrint('[webview] onPageFinished: $url');
+            AppLogger.webview('onPageFinished: $url');
             // Ensure scrollbars are hidden and content is responsive
             _controller.runJavaScript(
               "document.documentElement.style.overflow='hidden';"
@@ -48,13 +49,13 @@ class _WebViewEmbedWidgetState extends State<WebViewEmbedWidget> {
             if (mounted) {
               setState(() => _isLoading = false);
             }
-            debugPrint('[webview] onWebResourceError: ${err.errorCode} ${err.description}');
+            AppLogger.webview('onWebResourceError: ${err.errorCode} ${err.description}');
           },
-          onUrlChange: (change) => debugPrint('[webview] onUrlChange: ${change.url}'),
+          onUrlChange: (change) => AppLogger.webview('onUrlChange: ${change.url}'),
         ),
       )
       ..loadHtmlString(widget.htmlContent);
-    debugPrint('[webview] initState: loaded HTML length ${widget.htmlContent.length}');
+    AppLogger.webview('initState: loaded HTML length ${widget.htmlContent.length}');
   }
 
   @override

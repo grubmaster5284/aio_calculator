@@ -11,5 +11,3 @@ abstract class GraphConfig with _$GraphConfig {
     required bool showExpressionsPanel,
   }) = _GraphConfig;
 }
-
-
