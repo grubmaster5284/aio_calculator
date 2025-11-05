@@ -96,7 +96,7 @@ class _ConverterTile extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(KSize.radiusDefault),
       onTap: route != null ? () {
-        Navigator.of(context).pushNamed(route!);
+        Navigator.pushNamed(context, route!);
       } : null,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

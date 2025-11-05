@@ -72,12 +72,24 @@ void main() {
         ),
       );
 
-      // Test button press
-      await tester.tap(find.text('1'));
+      // Verify initial state
+      expect(find.text('0'), findsOneWidget);
+      expect(find.text('1'), findsOneWidget); // Button text
+
+      // Test button press - tap the button specifically
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
-      // Verify state change
-      expect(find.text('1'), findsOneWidget);
+      // Verify state change - display text should now be "1"
+      // There will be 2 widgets with text "1": display and button
+      expect(find.text('0'), findsNothing);
+      expect(find.text('1'), findsNWidgets(2));
+      
+      // Verify the display text changed by checking Text widgets
+      final textWidgets = find.byType(Text);
+      expect(textWidgets, findsNWidgets(2));
+      // First Text widget is the display, second is inside the button
+      expect(tester.widget<Text>(textWidgets.first).data, '1');
     });
 
     test('Basic arithmetic test', () {

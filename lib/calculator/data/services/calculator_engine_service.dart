@@ -22,8 +22,21 @@ class CalculatorEngineService {
   }
 
   String formatResult(double value) {
-    String resultString = value.toStringAsFixed(10);
-    resultString = resultString.replaceAll(RegExp(r'([.]*0+)(?!.*\d)'), '');
+    // Handle special cases
+    if (value.isNaN) return 'NaN';
+    if (value.isInfinite) return value.isNegative ? '-∞' : '∞';
+    
+    // Handle very large or very small numbers with scientific notation
+    if (value.abs() >= 1e10 || (value != 0 && value.abs() < 1e-6)) {
+      return value.toStringAsExponential(6);
+    }
+    
+    // For normal numbers, use fixed decimal places but remove trailing zeros
+    // Use 12 decimal places to capture precision, then trim
+    String resultString = value.toStringAsFixed(12);
+    // Remove trailing zeros and unnecessary decimal point
+    resultString = resultString.replaceAll(RegExp(r'0+$'), '');
+    resultString = resultString.replaceAll(RegExp(r'\.$'), '');
     return resultString;
   }
 

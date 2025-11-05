@@ -54,7 +54,9 @@ class CalculatorUiStateNotifier extends StateNotifier<CalculatorDisplayState> {
         return;
       case '%':
         final value = double.tryParse(currentDisplay) ?? 0;
-        state = state.copyWith(displayValue: (value / 100).toString());
+        final percentageResult = value / 100;
+        final formattedResult = _engine.formatResult(percentageResult);
+        state = state.copyWith(displayValue: formattedResult);
         return;
       case 'π':
         state = state.copyWith(displayValue: '3.141592653589793');

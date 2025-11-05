@@ -188,7 +188,7 @@ class ExchangerateApiService implements ICurrencyApiService {
     
     // Exchangerate-api.com free tier doesn't require authentication
     // Only add Authorization header if we have a valid API key
-    if (_apiKey != null && _apiKey != 'free' && _apiKey!.isNotEmpty) {
+    if (_apiKey != null && _apiKey != 'free' && _apiKey?.isNotEmpty == true) {
       headers['Authorization'] = 'Bearer $_apiKey';
     }
     

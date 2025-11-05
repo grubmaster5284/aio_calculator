@@ -43,8 +43,9 @@ void main() {
       final formatted = calculatorEngine.formatResult(3.0);
       expect(formatted, '3');
       
+      // With 12 decimal places, pi shows more precision
       final formattedDecimal = calculatorEngine.formatResult(3.141592653589793);
-      expect(formattedDecimal, '3.1415926536');
+      expect(formattedDecimal, '3.14159265359');
     });
 
     test('should handle square root', () {

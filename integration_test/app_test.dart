@@ -33,10 +33,40 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      // Test navigation to currency converter
-      // This would require implementing navigation testing
-      // For now, we'll just verify the app loads
+      // Verify we start on calculator page
       expect(find.byType(MaterialApp), findsOneWidget);
+
+      // Test navigation from Calculator to Converter Modes Page
+      final converterButton = find.byIcon(Icons.swap_horiz);
+      expect(converterButton, findsOneWidget);
+      await tester.tap(converterButton);
+      await tester.pumpAndSettle();
+      
+      // Verify we're on converter modes page
+      expect(find.text('Currency'), findsOneWidget);
+
+      // Test navigation from Converter Modes to Calculator (back button)
+      await tester.tap(find.byIcon(Icons.arrow_back).first);
+      await tester.pumpAndSettle();
+
+      // Verify we're back on calculator
+      expect(find.byIcon(Icons.swap_horiz), findsOneWidget);
+
+      // Test navigation from Calculator to Graphing
+      final graphingButton = find.byIcon(Icons.show_chart);
+      expect(graphingButton, findsOneWidget);
+      await tester.tap(graphingButton);
+      await tester.pumpAndSettle();
+
+      // Verify we're on graphing page
+      expect(find.byIcon(Icons.show_chart), findsOneWidget);
+
+      // Test back navigation from Graphing to Calculator
+      await tester.tap(find.byIcon(Icons.arrow_back).first);
+      await tester.pumpAndSettle();
+
+      // Verify we're back on calculator
+      expect(find.byIcon(Icons.swap_horiz), findsOneWidget);
     });
 
     testWidgets('App handles orientation changes', (WidgetTester tester) async {
