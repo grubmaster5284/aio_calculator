@@ -81,12 +81,12 @@ void main() {
 
   group('Graph Expression Value Object', () {
     test('creates valid graph expression', () {
-      final expression = GraphExpression('x^2 + 1');
+      const expression = GraphExpression('x^2 + 1');
       expect(expression.latex, 'x^2 + 1');
     });
 
     test('handles empty expression', () {
-      final expression = GraphExpression('');
+      const expression = GraphExpression('');
       expect(expression.latex, '');
     });
 
@@ -111,21 +111,21 @@ void main() {
 
     test('handles whitespace in expressions', () {
       // Both should be valid
-      expect(() => GraphExpression('  x^2 + 1  '), returnsNormally);
-      expect(() => GraphExpression('x^2 + 1'), returnsNormally);
+      expect(() => const GraphExpression('  x^2 + 1  '), returnsNormally);
+      expect(() => const GraphExpression('x^2 + 1'), returnsNormally);
     });
 
     test('equality works correctly', () {
-      final expr1 = GraphExpression('x^2');
-      final expr2 = GraphExpression('x^2');
-      final expr3 = GraphExpression('x^3');
+      const expr1 = GraphExpression('x^2');
+      const expr2 = GraphExpression('x^2');
+      const expr3 = GraphExpression('x^3');
       
       expect(expr1, equals(expr2));
       expect(expr1, isNot(equals(expr3)));
     });
 
     test('toString returns latex value', () {
-      final expression = GraphExpression('x^2 + 1');
+      const expression = GraphExpression('x^2 + 1');
       expect(expression.toString(), contains('x^2 + 1'));
     });
   });

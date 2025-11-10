@@ -5,15 +5,15 @@ import 'package:calculator_online/calculator/domain/entities/calculation_result_
 part 'online_calculation_state.freezed.dart';
 
 @freezed
-abstract class OnlineCalculationState with _$OnlineCalculationState {
+class OnlineCalculationState with _$OnlineCalculationState {
+  const OnlineCalculationState._();
+
   const factory OnlineCalculationState({
     @Default(false) bool isLoading,
     @Default(<CalculationFunctionModel>[]) List<CalculationFunctionModel> functions,
     CalculationResultModel? lastResult,
     String? errorMessage,
   }) = _OnlineCalculationState;
-
-  const OnlineCalculationState._();
 
   bool get hasError => errorMessage?.isNotEmpty ?? false;
 

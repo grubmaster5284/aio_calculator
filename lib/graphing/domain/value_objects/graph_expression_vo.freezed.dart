@@ -92,9 +92,7 @@ class __$$GraphExpressionImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$GraphExpressionImpl implements _GraphExpression {
-  _$GraphExpressionImpl(this.latex)
-      : assert(latex.trim().isNotEmpty || latex.isEmpty,
-            'Graph expression cannot be only whitespace');
+  const _$GraphExpressionImpl(this.latex);
 
   @override
   final String latex;
@@ -124,7 +122,7 @@ class _$GraphExpressionImpl implements _GraphExpression {
 }
 
 abstract class _GraphExpression implements GraphExpression {
-  factory _GraphExpression(final String latex) = _$GraphExpressionImpl;
+  const factory _GraphExpression(final String latex) = _$GraphExpressionImpl;
 
   @override
   String get latex;
