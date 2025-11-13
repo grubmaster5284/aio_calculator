@@ -46,7 +46,7 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
       if (conversionResult.isSuccess) {
         final result = conversionResult.value!;
         developer.log('[CurrencyRepository] Conversion successful: ${result.amountOutAsDouble}', name: 'CurrencyRepository');
-        
+
         // Cache the rate for future offline use
         final rate = RateModel(
           baseCurrencyCode: from,
@@ -56,27 +56,30 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
           timestamp: DateTime.now(),
         );
         await _cacheService.cacheRate(rate);
-        
+
         return Result.success(result);
       } else {
         // API failed, fallback to cached rate
         developer.log('[CurrencyRepository] API conversion failed: ${conversionResult.error}', name: 'CurrencyRepository');
         developer.log('[CurrencyRepository] Trying cached rate as fallback...', name: 'CurrencyRepository');
-        
+
         final cachedRateResult = await _cacheService.getCachedRate(
           from: from,
           to: to,
         );
-        
+
         if (cachedRateResult.isSuccess) {
           final cachedRate = cachedRateResult.value!;
           developer.log('[CurrencyRepository] Using cached rate: ${cachedRate.rateAsDouble}', name: 'CurrencyRepository');
-          
-          // Perform conversion using cached rate
-          final convertedAmount = amount.toDouble() * cachedRate.rateAsDouble;
-          const scale = 6;
-          final amountOutScaled = BigInt.from((convertedAmount * BigInt.from(10).pow(scale).toDouble()).round());
-          
+
+          // Perform conversion using cached rate while respecting the original amount scale
+          final product = amount.scaledValue * cachedRate.rateScaled;
+          final divisor = BigInt.from(10).pow(cachedRate.rateScale);
+          final quotient = product ~/ divisor;
+          final remainder = product.remainder(divisor);
+          final shouldRoundUp = remainder * BigInt.from(2) >= divisor;
+          final amountOutScaled = shouldRoundUp ? quotient + BigInt.one : quotient;
+
           final result = ConversionResultModel(
             fromCurrencyCode: from,
             toCurrencyCode: to,
@@ -87,7 +90,7 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
             amountOutScaled: amountOutScaled,
             timestamp: cachedRate.timestamp,
           );
-          
+
           developer.log('[CurrencyRepository] Conversion successful with cached rate: ${result.amountOutAsDouble}', name: 'CurrencyRepository');
           return Result.success(result);
         } else {
@@ -255,12 +258,15 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
       if (cachedRateResult.isSuccess) {
         final cachedRate = cachedRateResult.value!;
         developer.log('[CurrencyRepository] Using cached rate for offline conversion: ${cachedRate.rateAsDouble}', name: 'CurrencyRepository');
-        
-        // Perform conversion using cached rate
-        final convertedAmount = amount.toDouble() * cachedRate.rateAsDouble;
-        const scale = 6;
-        final amountOutScaled = BigInt.from((convertedAmount * BigInt.from(10).pow(scale).toDouble()).round());
-        
+
+        // Perform conversion using cached rate while respecting the original amount scale
+        final product = amount.scaledValue * cachedRate.rateScaled;
+        final divisor = BigInt.from(10).pow(cachedRate.rateScale);
+        final quotient = product ~/ divisor;
+        final remainder = product.remainder(divisor);
+        final shouldRoundUp = remainder * BigInt.from(2) >= divisor;
+        final amountOutScaled = shouldRoundUp ? quotient + BigInt.one : quotient;
+
         final result = ConversionResultModel(
           fromCurrencyCode: from,
           toCurrencyCode: to,
@@ -271,7 +277,7 @@ class CurrencyRepositoryImpl implements ICurrencyRepository {
           amountOutScaled: amountOutScaled,
           timestamp: DateTime.now(),
         );
-        
+
         developer.log('[CurrencyRepository] Offline conversion successful: ${result.amountOutAsDouble}', name: 'CurrencyRepository');
         return Result.success(result);
       } else {
